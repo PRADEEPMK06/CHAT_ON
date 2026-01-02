@@ -1,0 +1,39 @@
+﻿.user-badge-item{
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    padding: $base * 1.5 $base * 2.5;
+    border-radius: $base * 5;
+    display: flex;
+    align-items: center;
+    gap: $gap_sm;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    transition: all 0.3s ease;
+    
+    &:hover {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+        transform: translateY(-1px);
+    }
+    
+    span {
+        color: $text_main_color;
+        font-weight: 500;
+        font-size: $gap_md * 0.85;
+    }
+
+    button{
+        @include no_bd_no_bg;
+        text-align: center;
+        font-size: $gap_md * 0.9;
+        width: $gap_md * 1.2;
+        height: $gap_md * 1.2;
+        cursor: pointer;
+        color: $accent_color;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        &:hover {
+            transform: scale(1.2);
+        }
+    }
+}

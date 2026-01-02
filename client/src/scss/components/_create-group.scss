@@ -1,0 +1,79 @@
+.create-group{
+    .modal-container{
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        min-height: $base * 70;
+        min-width: $base * 80;
+        align-items: center;
+        background: $white;
+        border-radius: $base * 5;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        animation: slideIn 0.3s ease;
+
+        .modal-header{
+            text-align: center;
+            background: $header_gradient;
+            color: $white;
+            padding: $gap_lg;
+            border-radius: $base * 5 $base * 5 0 0;
+            
+            h2 {
+                font-weight: 600;
+            }
+        }
+        .modal-content{
+            padding: $gap_lg;
+            
+            .inputs{
+                @include flex_center;
+                flex-direction: column;
+                padding: 0;
+                gap: $gap_md;
+
+                input {
+                    width: 100%;
+                    padding: $gap_md;
+                    border: 2px solid $border_color_light;
+                    border-radius: $base * 3;
+                    font-size: $gap_md;
+                    transition: all 0.3s ease;
+                    
+                    &:focus {
+                        outline: none;
+                        border-color: $main_color;
+                        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+                    }
+                }
+
+                .contacts{
+                    max-height: $base * 40;
+                    overflow-y: auto;
+                    
+                    .contact{
+                        &::after{
+                            visibility: hidden;
+                        }
+                    }
+                }
+            }
+            .button-submit{
+                text-align: center;
+                margin-top: $gap_lg;
+
+                .button{
+                    @include gradient_button;
+                    margin-top: $gap_md;
+                    padding: $gap_md $gap_lg * 2;
+                    border-radius: $base * 5;
+                    font-weight: 600;
+                    font-size: $gap_md;
+                }
+            }
+        }
+    }
+    .active-search{
+        top: 50% !important;
+        transform: translate(-50%, -50%);
+    }
+}

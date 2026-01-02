@@ -1,0 +1,563 @@
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@import './variables';
+@import './mixins';
+
+@import './pages/chat';
+@import './pages/authorization';
+
+@import './components/aux/submit';
+@import './components/aux/user-bage';
+@import './components/user/info';
+@import './components/user/update';
+@import './components/welcome';
+@import './components/contacts';
+@import './components/update-group';
+@import './components/create-group';
+@import './components/messages';
+@import './components/chat-input';
+@import './components/chat-container';
+
+
+.Toastify__toast-theme--dark {
+    background: $header_gradient !important;
+    border-radius: $base * 3 !important;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    @include flex_center_center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    overflow: hidden;
+    font-size: $gap_md;
+    overflow-wrap: break-word;
+    font-family: 'Inter', 'Poppins', Arial, Helvetica, sans-serif;
+}
+
+@keyframes spinner {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.loading-spinner {
+    width: calc($base * 10);
+    height: calc($base * 10);
+    border: $base solid $selection_color;
+    border-top: $base solid $main_color;
+    will-change: transform;
+    border-radius: $border_round;
+    animation: spinner 1s linear infinite;
+}
+
+.hidden-input,
+.hidden-input label,
+.hidden-input label:hover .hover-text{
+    height: calc($base * 6);
+    width: calc($base * 6);
+}
+
+.hidden-input {
+    .hover-text, input {
+        display: none;
+    }
+
+    label {
+        position: absolute;
+        cursor: pointer;
+
+        &:hover .hover-text{
+            @include flex_center_center;
+            position: relative;
+            top: -105%;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            color: $white;
+            border-radius: $base * 2;
+        }
+    }
+
+    svg {
+        height: calc($base * 5);
+        width: calc($base * 5);
+        position: relative;
+        color: $main_color;
+    }
+}
+
+.chat-loading{
+    @include flex_center_center;
+    height: calc($gap_lg * 15);
+    flex-direction: column;
+    gap: $gap_md;
+    
+    b {
+        color: $text_secondary_color;
+        font-weight: 500;
+    }
+}
+
+.form-container{
+  font-family: 'Inter', 'Poppins', sans-serif;
+}
+
+.center{
+    @include flex_center_center;
+
+    svg{
+        margin-left: $gap_sm;
+        cursor: pointer;
+        color: $main_color;
+        transition: all 0.3s ease;
+        
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+    .modal-input{
+        position: relative;
+        margin-top: $gap_md;
+        height: calc($base * 12);
+        text-align: center;
+
+        & + .modal-input{
+            margin-top: $gap_md;
+        }
+
+        input {
+            @include no_bd_no_bg;
+            height: 100%;
+            width: 100%;
+            outline: none;
+            padding: $gap_md $gap_md $gap_md calc($base * 10);
+            font-size: $gap_md;
+            border: 2px solid $border_color_light;
+            border-radius: $base * 3;
+            background: $selection_color;
+            transition: all 0.3s ease;
+
+            &:focus{
+                border-color: $main_color;
+                background: $white;
+                box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+
+                & ~ svg{
+                    color: $main_color;
+                }
+            }
+        }
+        .active{
+            border-color: $main_color !important;
+            & ~ svg{
+                color: $main_color !important;
+            }
+        }
+
+        svg {
+            position: absolute;
+            top: 50%;
+            left: $base * 3;
+            transform: translateY(-50%);
+            color: $text_color;
+            font-size: calc($gap_md * 1.3);
+            transition: all 0.3s ease;
+        }
+
+        .button-submit{
+            @include gradient_button;
+            cursor: pointer;
+            padding: $gap_md $gap_lg;
+            margin-left: $gap_md;
+            border-radius: $base * 3;
+            font-weight: 600;
+        }
+    }
+}
+
+.width-100{
+  width: 100%;
+}
+
+.modal-active{
+  width: 100vw;
+  height: 100vh;
+  background-color: $modal_bg !important;
+}
+
+.none {
+  display: none;
+}
+
+.button{
+    @include gradient_button;
+    cursor: pointer;
+    width: 100%;
+    margin-top: calc($base * 6);
+    padding: $gap_md;
+    font-size: $gap_md;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-radius: $base * 3;
+}
+
+.contacts {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .contact {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: $gap_md;
+        width: 100%;
+        padding: $gap_md;
+        cursor: pointer;
+        color: $text_secondary_color;
+        transition: all 0.3s ease;
+        border-radius: $base * 3;
+        margin: $base 0;
+
+        &::after{
+            display: none;
+        }
+    
+        &:hover{
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+            transform: translateX(4px);
+        }
+        
+        .avatar {
+            img {
+                @include img_md;
+                max-inline-size: 100%;
+                border: 2px solid rgba(102, 126, 234, 0.2);
+            }
+        }
+    }
+}
+
+.chat-menu-toggle{
+    position: absolute;
+    display: inline-block;    
+    top: 100%;
+    right: $gap_md;
+    min-width: calc($base * 36);
+    min-height: auto;
+    cursor: pointer;
+    z-index: 100;
+    padding: $gap_sm 0;
+    background: $white;
+    border-radius: $base * 3;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    animation: slideIn 0.2s ease;
+    overflow: hidden;
+
+    .list-item{
+        @include flex_center;
+        @include no_bd_no_bg;
+        width: 100%;
+        padding: $gap_md $gap_lg;
+        transition: all 0.2s ease;
+
+        &:hover{
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        }
+        svg{
+            margin-right: $gap_md;
+            font-size: $gap_md * 1.2;
+            color: $main_color;
+        }
+        span{
+            color: $text_main_color;
+            font-size: calc($base * 2.8);
+            font-weight: 500;
+        }
+    }
+}
+
+.close-button-wrapper{
+    position: absolute;
+    top: $gap_md;
+    right: $gap_md;
+    left: auto;
+
+    .close-button{
+        @include no_bd_no_bg;
+        font-size: calc($gap_md * 1.5);
+        color: $text_color;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        
+        &:hover {
+            color: $accent_color;
+            transform: rotate(90deg);
+        }
+    }
+}
+
+.modal-wrapper{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    z-index: 100;
+    background-color: $modal_bg;
+    animation: fadeIn 0.2s ease;
+
+    .modal-container{
+        position: relative;
+        display: grid;
+        justify-content: center;
+        grid-template-rows: auto 1fr;
+        width: auto;
+        min-width: calc($base * 80);
+        max-width: calc($base * 120);
+        padding: 0;
+        background-color: $white;
+        border-radius: $base * 5;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+
+        .modal-header{
+            width: 100%;
+            background: $header_gradient;
+            color: $white;
+            padding: $gap_lg;
+            text-align: center;
+            
+            h2, h3 {
+                font-weight: 600;
+            }
+        }
+
+        .modal-content{
+            width: 100%;
+            padding: $gap_lg;
+
+            .inputs{
+                width: 100%;
+
+                .modal-input{
+                    position: relative;
+                    margin-top: $gap_md;
+                    height: calc($base * 12);
+                    width: 100%;
+                    
+                    & + .modal-input{
+                        margin-top: $gap_md;
+                    }
+
+                    input {
+                        @include no_bd_no_bg;
+                        height: 100%;
+                        width: 100%;
+                        padding: $gap_md $gap_md $gap_md calc($base * 10);
+                        outline: none;
+                        font-size: $gap_md;
+                        border: 2px solid $border_color_light;
+                        border-radius: $base * 3;
+                        background: $selection_color;
+                        transition: all 0.3s ease;
+            
+                        &[type="file"]{
+                            color: $text_color;
+                            padding-top: 4%;
+            
+                            &::-webkit-file-upload-button{
+                                display:none;
+                            }
+                            &:focus{
+                                border-color: $main_color;
+                            }
+                            & ~ svg{
+                                color: $text_color;
+                            }
+                        }
+
+                        &:focus{
+                            border-color: $main_color;
+                            background: $white;
+                            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+                            
+                            & ~ svg{
+                                color: $main_color;
+                            }
+                        }
+                        &:not(:placeholder-shown){
+                            &:not([type="file" i]){
+                                border-color: $main_color;
+                                & ~ svg{
+                                    color: $main_color;
+                                }
+                            }
+                        }
+                    }
+                    .active{
+                        border-color: $main_color !important;
+                        & ~ svg{
+                            color: $main_color !important;
+                        }
+                    }
+
+                    svg {
+                        position: absolute;
+                        top: 50%;
+                        left: $base * 3;
+                        font-size: calc($base * 4.5);
+                        color: $text_color;
+                        transform: translateY(-50%);
+                        transition: all 0.3s ease;
+                    }
+
+                    .button-submit{
+                        @include gradient_button;
+                        border-radius: $base * 3;
+                        padding: $gap_md $gap_lg;
+                        margin-left: $gap_md;
+                    }
+                }
+            }
+        }
+    }
+
+    .selected-users-wrapper{
+        display: flex;
+        flex-wrap: wrap;
+        gap: $gap_sm;
+        margin: $gap_md 0;
+    }
+    .user-badge{
+        display: flex;
+        align-items: center;
+        gap: $gap_sm;
+        padding: $base * 1.5 $base * 2.5;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        border: 1px solid rgba(102, 126, 234, 0.2);
+        border-radius: $base * 5;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+        }
+
+        button{
+            @include no_bd_no_bg;
+            height: $gap_md * 1.2;
+            width: $gap_md * 1.2;
+            text-align: center;
+            font-size: $gap_md * 0.9;
+            color: $accent_color;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            
+            &:hover {
+                transform: scale(1.2);
+            }
+        }
+    }
+}
+
+.icon-button{
+    @include no_bd_no_bg;
+    @include flex_center_center;
+    cursor: pointer;
+    font-size: $gap_md * 1.4;
+    color: $white;
+    transition: all 0.3s ease;
+    border-radius: $base * 2;
+    padding: $base;
+
+    &:hover{
+        background: rgba(255, 255, 255, 0.15);
+        transform: scale(1.05);
+
+        & + .tooltiptext {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+    }
+}
+
+.tooltip{
+    position: relative;
+}
+
+.tooltiptext {
+    position: absolute;
+    top: calc(100% + $base * 2);
+    left: 50%;
+    transform: translateX(-50%) translateY(-5px);
+    width: auto;
+    min-width: calc($base * 20);
+    white-space: nowrap;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    font-size: calc($base * 2.4);
+    text-align: center;
+    padding: $base * 1.5 $base * 2;
+    background: rgba(26, 32, 44, 0.9);
+    color: $white;
+    border-radius: $base * 2;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+
+    &::after {
+        content: " ";
+        position: absolute;
+        bottom: 100%; 
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: $base;
+        border-style: solid;
+        border-color: transparent transparent rgba(26, 32, 44, 0.9) transparent;
+    }
+}
+
+.grid{
+    grid-template-rows: 70% 30%;
+}

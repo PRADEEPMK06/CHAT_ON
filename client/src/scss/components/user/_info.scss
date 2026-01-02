@@ -1,0 +1,115 @@
+.user-info{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: $header_gradient;
+
+    &::after{
+        display: none;
+    }
+
+    .banner-section {
+        width: 100%;
+        height: $base * 20;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    .user-profile-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: $gap_md;
+        width: 100%;
+        padding: $gap_md;
+        margin-top: -$base * 8;
+
+        .profile-pic-container {
+            position: relative;
+            cursor: pointer;
+            
+            img {
+                border-radius: $border_round;
+                height: $base * 14;
+                width: $base * 14;
+                object-fit: cover;
+                border: 4px solid $white;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+                background: $white;
+            }
+
+            .edit-overlay {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.9);
+                border-radius: $border_round;
+                padding: $base * 1.5;
+                opacity: 0;
+                transition: all 0.3s ease;
+                
+                svg {
+                    font-size: $gap_md;
+                    color: $main_color;
+                }
+            }
+            
+            &:hover {
+                img {
+                    border-color: rgba(255, 255, 255, 0.8);
+                    transform: scale(1.02);
+                }
+                
+                .edit-overlay {
+                    opacity: 1;
+                }
+            }
+
+            .tooltiptext {
+                top: 105%;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0, 0, 0, 0.8);
+                font-size: $gap_md * 0.85;
+                padding: $gap_sm $gap_md;
+                white-space: nowrap;
+                
+                &::after {
+                    top: -8px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;
+                }
+            }
+        }
+
+        .logout-btn {
+            .icon-button {
+                color: $white;
+                background: rgba(255, 255, 255, 0.15);
+                border-radius: $base * 2;
+                padding: $base * 1.5 $base * 3;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: $gap_sm;
+                
+                &:hover {
+                    background: rgba(255, 255, 255, 0.25);
+                    transform: translateY(-2px);
+                }
+                
+                svg {
+                    font-size: $gap_md * 1.2;
+                }
+            }
+
+            .tooltiptext {
+                top: 110%;
+                background: rgba(0, 0, 0, 0.8);
+            }
+        }
+    }
+}

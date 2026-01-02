@@ -1,0 +1,125 @@
+.chat-container{
+    @include flex_center_center;
+    flex-direction: column;
+    overflow: hidden;
+    background: $white;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border-radius: 0;
+
+    .container {
+        position: relative;
+        display: grid;
+        grid-template-columns: 30% 70%;
+        width: 100vw;
+        height: 100vh;
+        background: $white;
+        
+        @media screen and (min-width: 720px) and (max-width: 1080px) {
+            grid-template-columns: 35% 65%;
+        }
+    }
+  
+    .aside {
+        display: grid;
+        grid-template-rows: auto 1fr;
+        overflow: auto;
+        background: linear-gradient(180deg, $white 0%, #fafbff 100%);
+        border-right: 1px solid rgba(102, 126, 234, 0.1);
+
+        .wrapper{
+            display: grid;
+            grid-template-rows: auto 1fr;
+
+            &::after{
+                display: none;
+            }
+        }
+
+        .search__chat {
+            @include flex_center_center;
+            position: relative;
+            width: 100%;
+            height: $base * 14;
+            padding: 0 $gap_md;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+            background: $white;
+
+            button{
+                @include no_bd_no_bg;
+                position: absolute;
+                display: inherit;
+                top: 50%;
+                transform: translateY(-50%);
+                left: $base * 6;
+                font-size: $gap_md * 1.2;
+                color: $main_color;
+                cursor: pointer;
+                transition: all 0.3s ease;
+
+                &:hover {
+                    color: $main_color_dark;
+                    transform: translateY(-50%) scale(1.1);
+                }
+            }
+            
+            .right-button{
+                top: 50%;
+                left: auto;
+                right: $base * 6;
+                cursor: pointer;
+
+                svg{
+                    font-size: $gap_md * 1.4 !important;
+                    path {
+                        stroke: $text_color;
+                    }
+                }
+
+                &:hover svg path {
+                    stroke: $main_color;
+                }
+            }
+
+            input {
+                width: 100%;
+                outline: none;
+                border: 2px solid transparent;
+                background: $selection_color;
+                padding: $base * 2.5;
+                height: $base * 10;
+                border-radius: $base * 5;
+                font-size: $base * 2.8;
+                padding-left: $base * 11;
+                transition: all 0.3s ease;
+                
+                &::placeholder {
+                    color: $text_color;
+                }
+
+                &:focus {
+                    border-color: $main_color;
+                    background: $white;
+                    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+                }
+            }
+        }
+    }
+
+    .contacts-wrapper{
+        overflow-y: auto;
+        overflow-x: hidden;
+        
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, $main_color 0%, $button_color 100%);
+            border-radius: $gap_md;
+        }
+    }
+}

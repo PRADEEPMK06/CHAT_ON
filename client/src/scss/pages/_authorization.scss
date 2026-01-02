@@ -1,0 +1,356 @@
+.auth {
+  position: relative;
+  min-width: $base * 86;
+  width: 100%;
+  overflow: hidden;
+  background: $white;
+  border-radius: $base * 5;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  margin: 0 $base * 4;
+  transition: all 0.4s ease;
+  animation: slideIn 0.5s ease;
+
+  &:hover {
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.3);
+  }
+
+  .form-container {
+    display: flex;
+    width: 200%;
+    transition: transform 0.4s ease, height 0.2s ease;
+
+    .form {
+      width: $border_round;
+      padding: $base * 8;
+      background-color: $white;
+      transition: margin-left 0.3s ease;
+      border-radius: $base * 5;
+
+      .brand-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: $gap_sm;
+        margin-bottom: $gap_md;
+        
+        .logo-icon {
+          font-size: $gap_lg * 1.5;
+        }
+        
+        .logo-text {
+          font-size: $gap_lg;
+          font-weight: 700;
+          background: $header_gradient;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          letter-spacing: 1px;
+        }
+      }
+
+      .title {
+        position: relative;
+        font-size: $gap_md * 1.6;
+        font-weight: 700;
+        color: $text_main_color;
+        margin-bottom: $gap_sm;
+        text-align: center;
+
+        &::before {
+          display: none;
+        }
+      }
+      
+      .subtitle {
+        text-align: center;
+        color: $text_color;
+        font-size: $gap_md * 0.9;
+        margin-bottom: $gap_md;
+      }
+
+      .input-field {
+        position: relative;
+        height: $base * 12;
+        width: 100%;
+        margin-top: $base * 4;
+
+        input {
+          @include no_bd_no_bg;
+          position: absolute;
+          height: 100%;
+          width: 100%;
+          padding: 0 $base * 10 0 $base * 12;
+          outline: none;
+          font-size: $gap_md;
+          background: $selection_color;
+          border-radius: $base * 3;
+          border: 2px solid transparent;
+          transition: all 0.3s ease;
+
+          &[type="file"] {
+            color: $text_color;
+            padding-top: 4%;
+            background: $selection_color;
+
+            &::-webkit-file-upload-button {
+              display: none;
+            }
+
+            &:focus {
+              border-color: $main_color;
+            }
+          }
+
+          &:focus,
+          &:not(:placeholder-shown):not([type="file" i]) {
+            border-color: $main_color;
+            background: $white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+
+            & ~ svg {
+              color: $main_color;
+              transform: translateY(-50%) scale(1.1);
+            }
+          }
+        }
+
+        .active {
+          border-color: $main_color !important;
+          background: $white !important;
+
+          & ~ svg {
+            color: $main_color !important;
+          }
+        }
+
+        svg {
+          position: absolute;
+          top: 50%;
+          left: $base * 3;
+          font-size: $base * 5;
+          color: $text_color;
+          transform: translateY(-50%);
+          transition: all 0.3s ease;
+        }
+
+        .password-icon {
+          left: auto;
+          right: $base * 3;
+          cursor: pointer;
+
+          &:hover {
+            color: $main_color;
+          }
+        }
+
+        .none {
+          display: none;
+        }
+      }
+
+      .button {
+        @include gradient_button;
+        margin-top: $base * 5;
+        height: $base * 11;
+        border-radius: $base * 3;
+        font-size: $gap_md;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+
+      .text {
+        color: $text_secondary_color;
+        font-size: $base * 2.8;
+
+        .login-link {
+          cursor: pointer;
+          font-size: inherit;
+          border: none;
+          background-color: transparent;
+          color: $main_color;
+          font-weight: 600;
+          transition: color 0.2s ease;
+
+          &:hover {
+            color: darken($main_color, 10%);
+            text-decoration: underline;
+          }
+        }
+      }
+
+      .login-signup {
+        margin-top: $base * 6;
+        text-align: center;
+      }
+    }
+  }
+}
+
+// OTP Verification Styles
+.otp-wrapper {
+  width: 100%;
+  
+  .otp-form {
+    width: 100%;
+    padding: $base * 8;
+    background-color: $white;
+    border-radius: $base * 5;
+    
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: $gap_sm;
+      margin-bottom: $gap_md;
+      
+      .logo-icon {
+        font-size: $gap_lg * 1.5;
+      }
+      
+      .logo-text {
+        font-size: $gap_lg;
+        font-weight: 700;
+        background: $header_gradient;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: 1px;
+      }
+    }
+    
+    .title {
+      font-size: $gap_md * 1.6;
+      font-weight: 700;
+      color: $text_main_color;
+      margin-bottom: $gap_sm;
+      text-align: center;
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: $text_color;
+      font-size: $gap_md * 0.9;
+      margin-bottom: $gap_lg;
+      line-height: 1.6;
+      
+      strong {
+        color: $main_color;
+        word-break: break-all;
+      }
+    }
+    
+    .otp-inputs {
+      display: flex;
+      justify-content: center;
+      gap: $gap_sm;
+      margin-bottom: $gap_md;
+      
+      .otp-input {
+        width: $base * 11;
+        height: $base * 13;
+        text-align: center;
+        font-size: $gap_lg;
+        font-weight: 700;
+        border: 2px solid $selection_color;
+        border-radius: $base * 2;
+        background: $selection_color;
+        color: $text_main_color;
+        transition: all 0.3s ease;
+        
+        &:focus {
+          outline: none;
+          border-color: $main_color;
+          background: $white;
+          box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+        
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+    }
+    
+    .timer-info {
+      text-align: center;
+      color: $text_color;
+      font-size: $gap_md * 0.8;
+      margin-bottom: $gap_md;
+      
+      strong {
+        color: $main_color;
+      }
+    }
+    
+    .input-field.button {
+      @include gradient_button;
+      margin-top: $gap_sm;
+      height: $base * 11;
+      border-radius: $base * 3;
+      font-size: $gap_md;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      width: 100%;
+      
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+    }
+    
+    .resend-section {
+      margin-top: $gap_md;
+      text-align: center;
+      
+      .text {
+        color: $text_secondary_color;
+        font-size: $base * 2.8;
+        
+        .resend-link {
+          cursor: pointer;
+          font-size: inherit;
+          border: none;
+          background-color: transparent;
+          color: $main_color;
+          font-weight: 600;
+          transition: color 0.2s ease;
+          
+          &:hover:not(.disabled) {
+            color: darken($main_color, 10%);
+            text-decoration: underline;
+          }
+          
+          &.disabled {
+            color: $text_color;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+    
+    .login-signup {
+      margin-top: $gap_md;
+      text-align: center;
+      
+      .text {
+        color: $text_secondary_color;
+        font-size: $base * 2.8;
+        
+        .login-link {
+          cursor: pointer;
+          font-size: inherit;
+          border: none;
+          background-color: transparent;
+          color: $main_color;
+          font-weight: 600;
+          transition: color 0.2s ease;
+          
+          &:hover {
+            color: darken($main_color, 10%);
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+}

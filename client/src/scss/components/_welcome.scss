@@ -1,0 +1,57 @@
+.welcome{
+    @include flex_center_center;
+    color: $text_main_color;
+    flex-direction: column;
+    background: linear-gradient(180deg, #f8fafc 0%, #f0f4ff 100%);
+    padding: $gap_lg * 2;
+    text-align: center;
+  
+    img {
+      height: $gap_lg * 8;
+      margin-bottom: $gap_lg;
+      animation: pulse 2s infinite;
+    }
+    
+    h1 {
+        font-size: $gap_lg * 1.5;
+        margin-bottom: $gap_md;
+        background: $header_gradient;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    h3 {
+        color: $text_secondary_color;
+        font-weight: 400;
+        max-width: 400px;
+        line-height: 1.6;
+    }
+    
+    span {
+      color: $main_color;
+      font-weight: 600;
+    }
+
+    .brand-welcome {
+        display: flex;
+        align-items: center;
+        gap: $gap_md;
+        margin-bottom: $gap_lg;
+        
+        .logo {
+            width: $base * 16;
+            height: $base * 16;
+            animation: none;
+        }
+        
+        .brand-text {
+            font-size: $gap_lg * 1.8;
+            font-weight: 700;
+            background: $header_gradient;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    }
+}

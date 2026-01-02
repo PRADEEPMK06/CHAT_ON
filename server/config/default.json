@@ -1,0 +1,4 @@
+{
+  "mongoURI": "mongodb+srv://<db_username>:<db_password>@cluster0.wkqdiyr.mongodb.net/?appName=Cluster0",
+  "jwtSecret": "india"
+}

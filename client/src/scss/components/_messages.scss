@@ -1,0 +1,164 @@
+.messages-container{
+    display: grid;
+    grid-template-rows: 1fr auto;
+    overflow: hidden;
+    background: linear-gradient(180deg, #f8fafc 0%, #f0f4ff 100%);
+
+    @media screen and (min-width: 720px) and (max-width: 1080px) {
+      grid-template-rows: 89% 11%;
+    }
+
+    p {
+      color: $text_main_color;
+    }
+  
+    .chat-messages {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: $gap_md;
+        overflow: auto;
+        padding: $gap_lg;
+        flex: 70%;
+        background: linear-gradient(180deg, #f8fafc 0%, #f0f4ff 100%);
+    
+        &::-webkit-scrollbar {
+            width: 6px;
+    
+            &-track {
+                background: transparent;
+            }
+    
+            &-thumb {
+                background: linear-gradient(180deg, $main_color 0%, $button_color 100%);
+                border-radius: $gap_md;
+            }
+        }
+  
+        .message {
+            position: relative;
+            animation: slideIn 0.3s ease;
+                
+            .content {
+                max-width: 65%;
+                min-height: auto;
+                overflow-wrap: break-word;
+                padding: $gap_md $gap_md;
+                font-size: $gap_md * 0.95;
+                border-radius: $base * 4;
+                background: $white;
+                line-height: 1.6;
+                box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    
+                @media screen and (min-width: 720px) and (max-width: 1080px) {
+                    max-width: 70%;
+                }
+
+                .text{
+                    padding-right: calc($base * 8);
+                    color: $text_main_color;
+                }
+
+                .triangle::before {
+                    display: none;
+                }
+                
+                img{
+                    max-width: $base * 50;
+                    border-radius: $base * 2;
+                    margin-right: $base;
+                }
+                
+                .time{
+                    min-width: $base * 6;
+                    font-size: $gap_md * 0.7;
+                    color: $text_color;
+                    display: block;
+                    text-align: end;
+                    margin-top: $gap_sm;
+                }
+            }
+
+        }
+        .sended {
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+            margin-right: 0;
+    
+            .content{
+                background: $header_gradient;
+                color: $white;
+                border-radius: $base * 4 $base * 4 0 $base * 4;
+                
+                .text {
+                    color: $white;
+                }
+                
+                .time {
+                    color: rgba(255, 255, 255, 0.7);
+                }
+                
+                .triangle::before {
+                    display: none;
+                }
+            }
+        }
+        .recieved{
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            gap: $gap_sm;
+            margin-left: 0;
+            
+            .content {
+                background: $white;
+                border-radius: $base * 4 $base * 4 $base * 4 0;
+                padding-left: $gap_md;
+                
+                .triangle::before{
+                    display: none;
+                }
+            }
+        }
+
+        .recieved-group {
+            gap: $gap_md;
+
+            .sender-pic, .sender-pic img{
+                width: $gap_md * 2;
+                height: $gap_md * 2;
+            }
+            .sender-pic{
+                img{
+                    border-radius: $border_round;
+                    border: 2px solid rgba(102, 126, 234, 0.2);
+                }
+            }
+            .content {
+                .text-group{
+                    padding-right: calc($base * 8);
+                }
+                .sender-username{
+                    font-weight: 600;
+                    margin-bottom: $gap_sm;
+                    span{
+                        color: $main_color;
+                    }
+                }
+                .text{
+                    padding-right: 0;
+                    color: $text_main_color;
+                }
+                .triangle::before{
+                    display: none;
+                }
+            }
+        }
+        .margin-top{
+            .content {
+                margin-top: $gap_sm;
+            }
+        }
+    }
+}

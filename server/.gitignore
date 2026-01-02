@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Archives
+*.zip
+
+# Environment
+.env
+
+# Build output
+build/
+dist/
+coverage/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# IDE
+sonar-project.properties
+
+.vscode/
+.idea/

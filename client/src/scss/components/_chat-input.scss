@@ -1,0 +1,174 @@
+.chat-input{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    background: $white;
+    padding: $gap_md $gap_lg;
+    border-top: 1px solid rgba(102, 126, 234, 0.1);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+
+    @media screen and (min-width: 720px) and (max-width: 1080px) {
+      padding: $gap_md;
+      gap: $gap_md;
+    }
+    .button-container {
+        display: flex;
+        gap: $gap_md;
+  
+        .emoji {
+            position: relative;
+
+            svg {
+                font-size: calc($gap_md * 1.6);
+                color: $main_color;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                
+                &:hover {
+                    transform: scale(1.1);
+                }
+            }
+            .emoji-picker-react {
+                position: absolute;
+                top: calc(-10 * #{$gap_lg});
+                background-color: $white;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+                border-radius: $base * 3;
+                border: 1px solid rgba(102, 126, 234, 0.1);
+    
+                .emoji-scroll-wrapper::-webkit-scrollbar {
+                    background-color: $selection_color;
+                    width: $base;
+
+                    &-thumb {
+                        background: $header_gradient;
+                        border-radius: $base;
+                    }
+                }
+                .emoji-categories {
+                    button {
+                        filter: none;
+                    }
+                }
+                .emoji-search {
+                    background-color: $selection_color;
+                    border: 2px solid transparent;
+                    border-radius: $base * 2;
+                    
+                    &:focus {
+                        border-color: $main_color;
+                    }
+                }
+                .emoji-group:before {
+                    background-color: $white;
+                }
+            }
+        }
+    }
+    .input-container {
+        @include flex_center;
+        width: 100%;
+        gap: $gap_md;
+
+        input {
+            flex: 1;
+            height: $base * 10;
+            border: 2px solid transparent;
+            background-color: $selection_color;
+            padding: $gap_sm $gap_md;
+            border-radius: $base * 5;
+            color: $text_main_color;
+            font-size: $gap_md;
+            cursor: text;
+            transition: all 0.3s ease;
+
+            &::placeholder{
+                font-size: calc($gap_md * .9);
+                color: $text_color;
+            }
+    
+            &::selection {
+                background-color: rgba(102, 126, 234, 0.3);
+            }
+            &:focus {
+                outline: none;
+                border-color: $main_color;
+                background: $white;
+                box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            }
+        }
+
+        .buttons{
+            @include flex_center;
+            gap: $gap_md;
+        }
+        .icon-button {
+            color: $main_color;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 50%;
+            padding: $base * 2;
+            transition: all 0.3s ease;
+            
+            &:hover {
+                background: rgba(102, 126, 234, 0.2);
+                transform: scale(1.05);
+            }
+        }
+        .submit-button {
+            @include gradient_button;
+            border-radius: 50%;
+            width: $base * 10;
+            height: $base * 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            @media screen and (min-width: 720px) and (max-width: 1080px) {
+                width: $base * 9;
+                height: $base * 9;
+
+                svg {
+                    font-size: $gap_md;
+                }
+            }
+            svg {
+                font-size: calc($gap_md * 1.4);
+                color: $white;
+            }
+        }
+    }
+    .attachment,
+    .attach-file {
+        height: calc($base * 20);
+    }
+
+    .attachment {
+        position: relative;
+        border-radius: $base * 2;
+        overflow: hidden;
+
+        .close-button-wrapper{
+            top: $base;
+            right: $base;
+            left: auto;
+            background: rgba(0, 0, 0, 0.6) !important;
+            padding: $base;
+            border-radius: 50%;
+
+            .close-button{
+                font-size: $gap_md * 0.8;
+                cursor: pointer;
+
+                svg{
+                    path {
+                        stroke: $white;
+                    }
+                }
+            }
+        }
+    }
+    .attach-file {
+        max-width: calc($base * 18);
+        border-radius: $base * 2;
+    }
+}
