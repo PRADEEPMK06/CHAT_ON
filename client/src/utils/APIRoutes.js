@@ -1,4 +1,5 @@
-export const host = "http://localhost:5000";
+export const host = "https://chat-on-backend-inkr.onrender.com";
+
 export const loginRoute = `${host}/api/auth/login`;
 export const registerRoute = `${host}/api/auth/register`;
 export const verifyOTPRoute = `${host}/api/auth/verify-otp`;
