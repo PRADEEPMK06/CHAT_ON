@@ -19,7 +19,7 @@ import { getProfilePicUrl } from "../utils/profileUtils";
 
 
 function UpdateProfile({ fetchAgain, setFetchAgain, setModalActive, handleDelete }) {
-    const { user, setUser } = ChatState();
+    const { user, setUser, profilePicVersion } = ChatState();
     const fileInputRef = useRef(null);
     //new values 
     const [newUsername, setNewUsername] = useState();
@@ -194,7 +194,7 @@ function UpdateProfile({ fetchAgain, setFetchAgain, setModalActive, handleDelete
                     
                     <div className="modal-header">
                         <div className="avatar" onClick={() => setShowProfilePicOptions(!showProfilePicOptions)}>
-                            <img src={getProfilePicUrl(user.profilePic, user.gender)}
+                            <img src={getProfilePicUrl(user.profilePic, user.gender, profilePicVersion)}
                                 alt={user.username} />
                             <div className="hover-text">
                                 <BsPencil /> Edit

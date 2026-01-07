@@ -48,7 +48,7 @@ const wallpaperOptions = [
 ];
 
 function ChatContainer({ socket, fetchAgain, setFetchAgain }) {
-  const { setSelectedChat, selectedChat, user, chats, setChats } = ChatState();
+  const { setSelectedChat, selectedChat, user, chats, setChats, profilePicVersion } = ChatState();
   const [showToggle, setShowToggle] = useState(false);
   const [modalUpdateActive, setModalUpdateActive] = useState("not");
   const [modalSubmitActive, setModalSubmitActive] = useState("not");
@@ -341,7 +341,7 @@ function ChatContainer({ socket, fetchAgain, setFetchAgain }) {
               <img
                 src={selectedChat.isGroupChat
                   ? process.env.REACT_APP_PROFILE_PICS_PATHS + selectedChat.groupPic
-                  : getProfilePicUrl(getSenderProfilePic(user, selectedChat.users), selectedChat.users[0]._id === user._id ? selectedChat.users[1]?.gender : selectedChat.users[0]?.gender)}
+                  : getProfilePicUrl(getSenderProfilePic(user, selectedChat.users), selectedChat.users[0]._id === user._id ? selectedChat.users[1]?.gender : selectedChat.users[0]?.gender, profilePicVersion)}
                 alt={getDisplayName()}
               />
             </div>

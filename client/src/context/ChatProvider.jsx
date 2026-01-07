@@ -9,6 +9,7 @@ const ChatProvider = ({ children }) => {
   const [notification, setNotification] = useState([]);
   const [chats, setChats] = useState();
   const [chts, setChts] = useState();
+  const [profilePicVersion, setProfilePicVersion] = useState(Date.now()); // Cache buster for profile pics
 
   const navigate = useNavigate();
 
@@ -19,6 +20,11 @@ const ChatProvider = ({ children }) => {
     if (!userInfo) navigate("/auth");
   }, [navigate]);
 
+  // Function to update user and trigger profile pic cache bust
+  const updateUser = (newUser) => {
+    setUser(newUser);
+    setProfilePicVersion(Date.now()); // Force re-render of profile pics
+  };
 
   return (
     <ChatContext.Provider
@@ -26,13 +32,15 @@ const ChatProvider = ({ children }) => {
         selectedChat,
         setSelectedChat,
         user,
-        setUser,
+        setUser: updateUser, // Use the wrapper function
         notification,
         setNotification,
         chats,
         setChats,
         chts, 
         setChts,
+        profilePicVersion,
+        setProfilePicVersion,
       }}
     >
       {children}

@@ -16,7 +16,7 @@ import CreateGroupChat from "./Group/CreateGroupChat";
 
 
 function UserInfo({ fetchAgain, setFetchAgain }) {
-    const { user, setUser } = ChatState();
+    const { user, setUser, profilePicVersion } = ChatState();
     const navigate = useNavigate();
     const [modalUpdateActive, setModalUpdateActive] = useState("not");
     const [showProfilePicOptions, setShowProfilePicOptions] = useState(false);
@@ -120,7 +120,7 @@ function UserInfo({ fetchAgain, setFetchAgain }) {
                             className="profile-pic-container tooltip" 
                             onClick={() => setShowProfilePicOptions(!showProfilePicOptions)}
                         >
-                            <img src={getProfilePicUrl(user.profilePic, user.gender)}
+                            <img src={getProfilePicUrl(user.profilePic, user.gender, profilePicVersion)}
                                 alt={user.username} className="profile-pic" />
                             <div className="edit-overlay">
                                 <RxPencil2 />

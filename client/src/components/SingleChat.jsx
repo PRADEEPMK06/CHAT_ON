@@ -24,7 +24,7 @@ function SingleChat({ fetchAgain, socket, setFetchAgain, selectedChat, wallpaper
     const [newAttach, setNewAttach] = useState();
     const [loading, setLoading] = useState(false);
     const scrollRef = useRef();
-    const { user } = ChatState();
+    const { user, profilePicVersion } = ChatState();
 
     const sendMessage = async (msg) => {
         setLoading(true);
@@ -130,7 +130,7 @@ function SingleChat({ fetchAgain, socket, setFetchAgain, selectedChat, wallpaper
                                         <div className={`${isGroupRecieved(message, selectedChat, user._id) ? "sender-pic" : ""}`}>
                                             {isGroupRecieved(message, selectedChat, user._id) &&
                                                 isLastMessage(messages, message, i) &&
-                                                <img src={getProfilePicUrl(message.sender.profilePic, message.sender.gender)}
+                                                <img src={getProfilePicUrl(message.sender.profilePic, message.sender.gender, profilePicVersion)}
                                                     alt={message.sender.username} />
                                             }
                                         </div>

@@ -9,7 +9,7 @@ import { getProfilePicUrl } from "../utils/profileUtils";
 import GroupChatCreate from "./Group/CreateGroupChat";
 
 function Contacts({ fetchAgain, selectedChat, socket }) {
-  const { setSelectedChat, chats, user, setChats } = ChatState();
+  const { setSelectedChat, chats, user, setChats, profilePicVersion } = ChatState();
   const [loading, setLoading] = useState(false);
   const [modalActive, setModalActive] = useState('not');
 
@@ -67,7 +67,7 @@ function Contacts({ fetchAgain, selectedChat, socket }) {
                           <div className="avatar" >
                             <img src={chat.isGroupChat
                               ? process.env.REACT_APP_PROFILE_PICS_PATHS + chat.groupPic
-                              : getProfilePicUrl(getSenderProfilePic(user, chat.users), chat.users[0]._id === user._id ? chat.users[1]?.gender : chat.users[0]?.gender)}
+                              : getProfilePicUrl(getSenderProfilePic(user, chat.users), chat.users[0]._id === user._id ? chat.users[1]?.gender : chat.users[0]?.gender, profilePicVersion)}
                               alt={chat.isGroupChat
                                 ? chat.chatName
                                 : getSender(user, chat.users)}
