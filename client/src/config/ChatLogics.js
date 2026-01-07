@@ -1,3 +1,8 @@
+// Get default profile pic based on gender
+const getDefaultProfilePic = (gender = 'male') => {
+  return gender === 'female' ? 'female.webp' : 'male.webp';
+};
+
 export const isSameSenderMargin = (messages, m, i, userId) => {
   // console.log(i === messages.length - 1);
 
@@ -31,7 +36,12 @@ export const getSender = (loggedUser, users) => {
 };
 
 export const getSenderProfilePic = (loggedUser, users) => {
-  return users[0]._id === loggedUser._id ? users[1].profilePic : users[0].profilePic;
+  const sender = users[0]._id === loggedUser._id ? users[1] : users[0];
+  // Return profile pic or gender-based default
+  if (!sender.profilePic || sender.profilePic === 'default.svg' || sender.profilePic === '') {
+    return getDefaultProfilePic(sender.gender);
+  }
+  return sender.profilePic;
 };
 
 export const getSenderFull = (loggedUser, users) => {

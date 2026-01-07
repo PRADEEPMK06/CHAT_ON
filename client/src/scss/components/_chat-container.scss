@@ -1,8 +1,9 @@
 .right-side{
     position: relative;
     display: grid;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: auto 1fr auto;
     overflow: hidden;
+    height: 100vh;
 
     .chat-header {
         display: flex;
@@ -10,9 +11,17 @@
         justify-content: space-between;
         gap: $gap_md;
         background: $header_gradient;
-        padding: $gap_md $gap_lg;
-        min-height: $base * 16;
+        padding: $gap_lg $gap_lg;
+        padding-top: $gap_lg + $gap_sm;
+        min-height: $base * 18;
         box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        
+        @media screen and (max-width: 480px) {
+            padding: $gap_md;
+            padding-top: $gap_md + $gap_sm;
+            min-height: $base * 16;
+            gap: $gap_sm;
+        }
         
         .back-button {
             color: $white;
@@ -26,12 +35,20 @@
             align-items: center;
             justify-content: center;
             
+            @media screen and (max-width: 480px) {
+                padding: $base;
+            }
+            
             &:hover {
                 background: rgba(255, 255, 255, 0.25);
             }
             
             svg {
                 font-size: $gap_md * 1.2;
+                
+                @media screen and (max-width: 480px) {
+                    font-size: $gap_md;
+                }
             }
         }
         
@@ -39,11 +56,30 @@
             @include flex_center;
             gap: $gap_md;
             flex: 1;
+            
+            @media screen and (max-width: 480px) {
+                gap: $gap_sm;
+            }
+            
+            .avatar {
+                @media screen and (max-width: 480px) {
+                    img {
+                        width: $base * 9 !important;
+                        height: $base * 9 !important;
+                    }
+                }
+            }
 
             img {
                 @include img_md;
                 border: 3px solid rgba(255, 255, 255, 0.3);
                 transition: all 0.3s ease;
+                
+                @media screen and (max-width: 480px) {
+                    width: $base * 9;
+                    height: $base * 9;
+                    border-width: 2px;
+                }
                 
                 &:hover {
                     border-color: rgba(255, 255, 255, 0.8);
@@ -56,6 +92,10 @@
                     font-weight: 600;
                     font-size: $gap_md * 1.1;
                     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    
+                    @media screen and (max-width: 480px) {
+                        font-size: $gap_md * 0.9;
+                    }
                 }
                 
                 .status {
@@ -64,6 +104,10 @@
                     display: flex;
                     align-items: center;
                     gap: $gap_sm;
+                    
+                    @media screen and (max-width: 480px) {
+                        font-size: $gap_md * 0.7;
+                    }
                     
                     &::before {
                         content: '';
@@ -80,35 +124,328 @@
         .chat-menu{
             display: flex;
             gap: $gap_sm;
+            position: relative;
             
-            .icon-button {
+            .menu-button {
                 color: $white;
                 background: rgba(255, 255, 255, 0.15);
                 border-radius: $base * 2;
-                padding: $base * 1.5;
+                padding: $base * 2;
                 transition: all 0.3s ease;
+                border: none;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                
+                svg {
+                    font-size: $base * 5;
+                }
                 
                 &:hover {
                     background: rgba(255, 255, 255, 0.25);
+                    transform: scale(1.05);
+                }
+                
+                &.active {
+                    background: rgba(255, 255, 255, 0.3);
+                    transform: rotate(90deg);
                 }
             }
             
-            .transform{
-                transform: rotate(90deg);
-                transition: transform 0.3s ease;
+            .chat-menu-dropdown {
+                position: absolute;
+                right: 0;
+                top: calc(100% + $gap_sm);
+                background: $white;
+                border-radius: $base * 3;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+                overflow: hidden;
+                animation: slideIn 0.2s ease;
+                min-width: $base * 45;
+                
+                .list-item {
+                    display: flex;
+                    align-items: center;
+                    gap: $gap_md;
+                    padding: $gap_md $gap_lg;
+                    width: 100%;
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    font-size: $base * 3.5;
+                    color: $text_main_color;
+                    white-space: nowrap;
+                    
+                    svg {
+                        font-size: $base * 4;
+                        color: $primary_color;
+                    }
+                    
+                    &:hover {
+                        background: rgba(102, 126, 234, 0.1);
+                        color: $primary_color;
+                    }
+                }
             }
         }
-        .chat-menu-toggle{
-            position: absolute;
-            right: $gap_lg;
-            top: 100%;
-            background: $white;
-            border-radius: $base * 3;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-            z-index: 100;
-            overflow: hidden;
-            animation: slideIn 0.2s ease;
+        
+        .blocked-badge {
+            background: #ff4757;
+            color: white;
+            font-size: $base * 2.5;
+            padding: $base * 0.5 $base * 1.5;
+            border-radius: $base * 2;
+            margin-left: $gap_sm;
         }
 
+    }
+    
+    // Wallpaper Modal
+    .wallpaper-modal {
+        max-width: 400px;
+        max-height: 80vh;
+        overflow-y: auto;
+        
+        .wallpaper-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: $gap_md;
+            padding: $gap_lg;
+            
+            .wallpaper-option {
+                height: 80px;
+                border-radius: $base * 2;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                border: 3px solid transparent;
+                
+                span {
+                    background: rgba(255, 255, 255, 0.9);
+                    padding: $base $base * 2;
+                    border-radius: $base * 2;
+                    font-size: $base * 3;
+                    font-weight: 500;
+                }
+                
+                &:hover {
+                    transform: scale(1.05);
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                }
+                
+                &.selected {
+                    border-color: $primary_color;
+                    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.5);
+                }
+            }
+        }
+    }
+    
+    // Nickname Modal
+    .nickname-modal {
+        max-width: 400px;
+        max-height: 80vh;
+        overflow-y: auto;
+        
+        .modal-header p {
+            color: $text_secondary_color;
+            margin-top: $gap_sm;
+            font-size: $base * 3.5;
+        }
+        
+        .modal-input {
+            position: relative;
+            margin-bottom: $gap_md;
+            
+            input {
+                width: 100%;
+                padding: $gap_md $gap_lg;
+                padding-right: $gap_lg * 2;
+                border: 2px solid $border_color_light;
+                border-radius: $base * 3;
+                font-size: $base * 4;
+                transition: all 0.3s ease;
+                
+                &:focus {
+                    outline: none;
+                    border-color: $primary_color;
+                    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+                }
+            }
+            
+            svg {
+                position: absolute;
+                right: $gap_md;
+                top: 50%;
+                transform: translateY(-50%);
+                color: $text_secondary_color;
+                font-size: $base * 4;
+            }
+        }
+    }
+    
+    // Add to Group Modal
+    .add-to-group-modal {
+        max-width: 450px;
+        max-height: 80vh;
+        overflow-y: auto;
+        
+        .modal-content {
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: $gap_lg;
+        }
+        
+        .create-new-group-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: $gap_sm;
+            width: 100%;
+            padding: $gap_md $gap_lg;
+            background: $header_gradient;
+            color: white;
+            border: none;
+            border-radius: $base * 3;
+            font-size: $base * 4;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: $gap_md;
+            
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            }
+        }
+        
+        h4 {
+            color: $text_secondary_color;
+            margin: $gap_lg 0 $gap_md;
+            font-size: $base * 3.5;
+            text-align: center;
+        }
+        
+        .existing-groups {
+            max-height: 200px;
+            overflow-y: auto;
+            
+            .group-item {
+                display: flex;
+                align-items: center;
+                gap: $gap_md;
+                padding: $gap_md;
+                border-radius: $base * 2;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                
+                img {
+                    width: $base * 10;
+                    height: $base * 10;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+                
+                span {
+                    font-weight: 500;
+                    color: $text_main_color;
+                }
+                
+                &:hover {
+                    background: rgba(102, 126, 234, 0.1);
+                }
+            }
+        }
+        
+        .modal-input {
+            position: relative;
+            margin-bottom: $gap_md;
+            
+            input {
+                width: 100%;
+                padding: $gap_md $gap_lg;
+                padding-right: $gap_lg * 2;
+                border: 2px solid $border_color_light;
+                border-radius: $base * 3;
+                font-size: $base * 4;
+                transition: all 0.3s ease;
+                
+                &:focus {
+                    outline: none;
+                    border-color: $primary_color;
+                    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+                }
+            }
+            
+            svg {
+                position: absolute;
+                right: $gap_md;
+                top: 50%;
+                transform: translateY(-50%);
+                color: $text_secondary_color;
+                font-size: $base * 4;
+            }
+        }
+        
+        .selected-users {
+            display: flex;
+            flex-wrap: wrap;
+            gap: $gap_sm;
+            margin-bottom: $gap_md;
+            
+            .user-badge {
+                display: flex;
+                align-items: center;
+                gap: $gap_sm;
+                background: $header_gradient;
+                color: white;
+                padding: $base $base * 2;
+                border-radius: $base * 4;
+                font-size: $base * 3;
+                
+                svg {
+                    cursor: pointer;
+                    opacity: 0.8;
+                    
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+        
+        .search-results {
+            max-height: 150px;
+            overflow-y: auto;
+            margin-bottom: $gap_md;
+        }
+    }
+    
+    // Button submit
+    .button-submit {
+        margin-top: $gap_lg;
+        
+        .button {
+            width: 100%;
+            padding: $gap_md $gap_lg;
+            background: $header_gradient;
+            color: white;
+            border: none;
+            border-radius: $base * 3;
+            font-size: $base * 4;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            }
+        }
     }
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import { ChatState } from "../context/ChatProvider";
 import { recieveMessageRoute, sendMessageRoute } from "../utils/APIRoutes";
 import { toastOptions } from "../utils/constants";
+import { getProfilePicUrl } from "../utils/profileUtils";
 import {
     isGroupRecieved,
     isAnotherSender,
@@ -17,7 +18,7 @@ import {
 import ChatInput from "./ChatInput";
 
 
-function SingleChat({ fetchAgain, socket, setFetchAgain, selectedChat }) {
+function SingleChat({ fetchAgain, socket, setFetchAgain, selectedChat, wallpaper }) {
     const [messages, setMessages] = useState([]);
     const [socketConnected, setSocketConnected] = useState(false);
     const [newAttach, setNewAttach] = useState();
@@ -111,7 +112,10 @@ function SingleChat({ fetchAgain, socket, setFetchAgain, selectedChat }) {
 
     return (
         <>
-            <div className={`messages-container ${newAttach ? 'grid' : ''}`}>
+            <div 
+                className={`messages-container ${newAttach ? 'grid' : ''}`}
+                style={wallpaper ? { background: wallpaper } : {}}
+            >
                 <div className="chat-messages">
                     {messages ?
                         (messages.map((message, i) => {
@@ -126,7 +130,7 @@ function SingleChat({ fetchAgain, socket, setFetchAgain, selectedChat }) {
                                         <div className={`${isGroupRecieved(message, selectedChat, user._id) ? "sender-pic" : ""}`}>
                                             {isGroupRecieved(message, selectedChat, user._id) &&
                                                 isLastMessage(messages, message, i) &&
-                                                <img src={process.env.REACT_APP_PROFILE_PICS_PATHS + message.sender.profilePic}
+                                                <img src={getProfilePicUrl(message.sender.profilePic, message.sender.gender)}
                                                     alt={message.sender.username} />
                                             }
                                         </div>
@@ -168,7 +172,6 @@ function SingleChat({ fetchAgain, socket, setFetchAgain, selectedChat }) {
                 </div>
                 <ChatInput handleSendMsg={sendMessage} setNewAttach={setNewAttach} newAttach={newAttach} />
             </div>
-            <ToastContainer />
         </>
     );
 };

@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { SlMagnifier } from "react-icons/sl";
 import { IoIosArrowBack } from "react-icons/io";
 import { GrFormClose } from "react-icons/gr";
@@ -122,7 +121,6 @@ function Chat() {
           </div>
         }
       </div>
-      <ToastContainer />
     </>
   );
 };

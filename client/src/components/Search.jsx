@@ -1,5 +1,4 @@
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import axios from "axios";
 import { accessChatRoute } from "../utils/APIRoutes";
 import { toastOptions } from "../utils/constants";
@@ -48,7 +47,6 @@ function Search({ searchResults }) {
           </div>
         )}
       </div>
-      <ToastContainer />
     </>
   );
 }

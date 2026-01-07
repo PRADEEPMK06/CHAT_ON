@@ -16,6 +16,15 @@
                 transform: scale(1.1) rotate(90deg);
                 box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
             }
+            
+            @media screen and (max-width: 480px) {
+                left: auto;
+                right: $gap_lg;
+            }
+
+            @media screen and (min-width: 481px) and (max-width: 720px) {
+                left: calc(35% - $gap_lg * 2);
+            }
 
             @media screen and (min-width: 720px) and (max-width: 1080px) {
                 left: calc(35% - $gap_lg * 2);
@@ -27,6 +36,7 @@
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.8);
+            pointer-events: none;
         
             &::after {
                 top: 100%; 
@@ -49,6 +59,11 @@
             cursor: pointer;
             transition: all 0.3s ease;
             animation: fadeIn 0.3s ease;
+            
+            @media screen and (max-width: 720px) {
+                gap: $gap_sm;
+                padding: $gap_sm;
+            }
 
             &:hover {
                 background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
@@ -64,6 +79,11 @@
                     border-radius: 50%;
                     border: 2px solid rgba(102, 126, 234, 0.2);
                     transition: all 0.3s ease;
+                    
+                    @media screen and (max-width: 720px) {
+                        width: $base * 9;
+                        height: $base * 9;
+                    }
                 }
             }
 
@@ -78,6 +98,10 @@
                     font-weight: 600;
                     color: $text_main_color;
                     font-size: $gap_md * 0.95;
+                    
+                    @media screen and (max-width: 720px) {
+                        font-size: $gap_md * 0.85;
+                    }
                 }
                 .time{
                     grid-column: 3;

@@ -2,11 +2,13 @@
   position: relative;
   min-width: $base * 86;
   width: 100%;
-  overflow: hidden;
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
   background: $white;
   border-radius: $base * 5;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  margin: 0 $base * 4;
+  margin: $gap_lg $base * 4;
   transition: all 0.4s ease;
   animation: slideIn 0.5s ease;
 
@@ -145,6 +147,104 @@
 
         .none {
           display: none;
+        }
+      }
+
+      .gender-field {
+        select {
+          @include no_bd_no_bg;
+          position: absolute;
+          height: 100%;
+          width: 100%;
+          padding: 0 $base * 10 0 $base * 12;
+          outline: none;
+          font-size: $gap_md;
+          background: $selection_color;
+          border-radius: $base * 3;
+          border: 2px solid transparent;
+          transition: all 0.3s ease;
+          cursor: pointer;
+          appearance: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+
+          &:focus {
+            border-color: $main_color;
+            background: $white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+
+            & ~ svg {
+              color: $main_color;
+              transform: translateY(-50%) scale(1.1);
+            }
+          }
+
+          option {
+            padding: $gap_sm;
+            background: $white;
+          }
+        }
+
+        &::after {
+          content: '▼';
+          position: absolute;
+          right: $base * 4;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: $base * 2;
+          color: $text_color;
+          pointer-events: none;
+        }
+      }
+
+      .profile-pic-field {
+        height: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: transparent;
+        margin-top: $gap_md;
+        
+        .profile-pic-label {
+          position: relative;
+          cursor: pointer;
+          display: inline-block;
+          
+          .profile-preview {
+            width: $base * 18;
+            height: $base * 18;
+            border-radius: $border_round;
+            object-fit: cover;
+            border: 3px solid $selection_color;
+            transition: all 0.3s ease;
+          }
+          
+          .upload-overlay {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: $header_gradient;
+            color: $white;
+            width: $base * 8;
+            height: $base * 8;
+            border-radius: $border_round;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: $base * 4;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+          }
+          
+          &:hover {
+            .profile-preview {
+              border-color: $main_color;
+            }
+            
+            .upload-overlay {
+              transform: scale(1.1);
+            }
+          }
         }
       }
 

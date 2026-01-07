@@ -16,11 +16,12 @@
         position: relative;
         display: flex;
         flex-direction: column;
+        justify-content: flex-end;
         gap: $gap_md;
         overflow: auto;
         padding: $gap_lg;
-        flex: 70%;
-        background: linear-gradient(180deg, #f8fafc 0%, #f0f4ff 100%);
+        flex: 1;
+        background: transparent;
     
         &::-webkit-scrollbar {
             width: 6px;

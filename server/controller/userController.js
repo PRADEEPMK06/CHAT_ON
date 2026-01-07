@@ -13,10 +13,18 @@ const { generateOTP, sendOTPEmail } = require('../config/emailService');
 // Step 1: Initial registration - sends OTP
 module.exports.register = async (req, res, next) => {
     try {
-        const { username, email, password } = req.body;
+        const { username, email, password, gender } = req.body;
         const usernameCheck = await User.findOne({ username });
         const emailCheck = await User.findOne({ email });
-        const profilePicUrl = (req.file) ? req.file.filename : 'default.svg';
+        
+        // Set default profile pic based on gender if no custom pic uploaded
+        let profilePicUrl;
+        if (req.file) {
+            profilePicUrl = req.file.filename;
+        } else {
+            // Use gender-based default profile picture
+            profilePicUrl = gender === 'female' ? 'female.svg' : 'male.svg';
+        }
 
         if (usernameCheck) {
             return res.json({ msg: "The username is already used", status: false });
@@ -34,6 +42,7 @@ module.exports.register = async (req, res, next) => {
             username,
             email,
             password: hashedPassword,
+            gender: gender || 'male',
             profilePic: profilePicUrl,
             isVerified: false,
             otp: otp,
@@ -81,6 +90,7 @@ module.exports.register = async (req, res, next) => {
                     _id: user._id,
                     username: user.username,
                     email: user.email,
+                    gender: user.gender,
                     profilePic: user.profilePic,
                     bannerPic: user.bannerPic,
                     bannerColor: user.bannerColor,
@@ -133,6 +143,7 @@ module.exports.verifyOTP = async (req, res, next) => {
                 _id: user._id,
                 username: user.username,
                 email: user.email,
+                gender: user.gender,
                 profilePic: user.profilePic,
                 bannerPic: user.bannerPic,
                 bannerColor: user.bannerColor,
@@ -232,6 +243,7 @@ module.exports.login = async (req, res, next) => {
                 _id: user._id,
                 username: user.username,
                 email: user.email,
+                gender: user.gender,
                 profilePic: user.profilePic,
                 bannerPic: user.bannerPic,
                 bannerColor: user.bannerColor,
@@ -312,26 +324,65 @@ module.exports.emailUpdate = async (req, res) => {
 };
 
 module.exports.profilePicUpdate = async (req, res) => {
-    const { userId } = req.body;
-    const profilePicUrl = (req.file) ? req.file.filename : 'default.svg';
-    const updatedUser = await User.findByIdAndUpdate(userId, { profilePic: profilePicUrl, }, { new: true, });
-    if (!updatedUser) {
-        res.status(404);
-        throw new Error("Chat Not Found");
-    } else {
-        res.json({
-            status: true, updatedUser: {
-                _id: updatedUser._id,
-                username: updatedUser.username,
-                email: updatedUser.email,
-                profilePic: updatedUser.profilePic,
-                bannerPic: updatedUser.bannerPic,
-                bannerColor: updatedUser.bannerColor,
-                isAdmin: updatedUser.isAdmin,
-                token: generateToken(updatedUser._id),
-            }
-        });
+    const { userId, removeProfilePic } = req.body;
+    
+    // Get current user to check gender for default pic
+    const currentUser = await User.findById(userId);
+    if (!currentUser) {
+        return res.status(404).json({ status: false, message: "User not found" });
     }
+    
+    let profilePicUrl;
+    
+    if (removeProfilePic) {
+        // Set to gender-based default
+        profilePicUrl = currentUser.gender === 'female' ? 'female.svg' : 'male.svg';
+        
+        // Delete old profile pic if it's not a default
+        if (currentUser.profilePic && 
+            currentUser.profilePic !== 'default.svg' && 
+            currentUser.profilePic !== 'male.svg' && 
+            currentUser.profilePic !== 'female.svg') {
+            try {
+                await unlinkAsync(path.join(__dirname, '../images/profile_pictures/', currentUser.profilePic));
+            } catch (e) {
+                console.log('Could not delete old profile pic:', currentUser.profilePic);
+            }
+        }
+    } else if (req.file) {
+        profilePicUrl = req.file.filename;
+        
+        // Delete old profile pic if it's not a default
+        if (currentUser.profilePic && 
+            currentUser.profilePic !== 'default.svg' && 
+            currentUser.profilePic !== 'male.svg' && 
+            currentUser.profilePic !== 'female.svg') {
+            try {
+                await unlinkAsync(path.join(__dirname, '../images/profile_pictures/', currentUser.profilePic));
+            } catch (e) {
+                console.log('Could not delete old profile pic:', currentUser.profilePic);
+            }
+        }
+    } else {
+        // No file and not removing, keep current
+        profilePicUrl = currentUser.profilePic;
+    }
+    
+    const updatedUser = await User.findByIdAndUpdate(userId, { profilePic: profilePicUrl }, { new: true });
+    
+    res.json({
+        status: true, updatedUser: {
+            _id: updatedUser._id,
+            username: updatedUser.username,
+            email: updatedUser.email,
+            gender: updatedUser.gender,
+            profilePic: updatedUser.profilePic,
+            bannerPic: updatedUser.bannerPic,
+            bannerColor: updatedUser.bannerColor,
+            isAdmin: updatedUser.isAdmin,
+            token: generateToken(updatedUser._id),
+        }
+    });
 };
 
 module.exports.bannerUpdate = async (req, res) => {
@@ -395,37 +446,102 @@ module.exports.passwordUpdate = async (req, res) => {
 };
 
 module.exports.deleteProfile = async (req, res) => {
-    const { userId } = req.body;
-    const user = await User.findById(userId);
-    const allChats = await Chat.find({ users: { $elemMatch: { $eq: req.user._id } } });
-    const groupAdminChats = await Chat.find({ users: { $elemMatch: { $eq: req.user._id } }, groupAdmin: userId });
-    const profilePicUrl = user.profilePic;
+    try {
+        const { userId } = req.body;
+        const user = await User.findById(userId);
+        
+        if (!user) {
+            return res.status(404).json({ status: false, message: "User not found" });
+        }
+        
+        const allChats = await Chat.find({ users: { $elemMatch: { $eq: req.user._id } } });
+        const groupAdminChats = await Chat.find({ users: { $elemMatch: { $eq: req.user._id } }, groupAdmin: userId });
+        const profilePicUrl = user.profilePic;
 
-    if (groupAdminChats.length !== 0 && groupAdminChats !== undefined) {
-        let groupPicArr = [];
-        groupAdminChats.map((chat) => { groupPicArr.push(chat.groupPic) });
-        const filtered = groupPicArr.filter(pic => pic !== 'default-group.svg');
-        filtered.map(async (pic) => { await unlinkAsync(path.join(__dirname, '../profile_pictures/', pic)); })
-    }
+        // Delete group pics for chats where user is admin
+        if (groupAdminChats.length !== 0 && groupAdminChats !== undefined) {
+            let groupPicArr = [];
+            groupAdminChats.map((chat) => { groupPicArr.push(chat.groupPic) });
+            const filtered = groupPicArr.filter(pic => pic && pic !== 'default-group.svg');
+            for (const pic of filtered) {
+                try {
+                    await unlinkAsync(path.join(__dirname, '../images/profile_pictures/', pic));
+                } catch (e) {
+                    console.log('Could not delete group pic:', pic);
+                }
+            }
+        }
 
-    if (profilePicUrl && profilePicUrl !== 'default.svg') {
-        await unlinkAsync(path.join(__dirname, '../profile_pictures/', profilePicUrl));
-    }
+        // Delete user's profile pic if not default
+        if (profilePicUrl && profilePicUrl !== 'default.svg' && profilePicUrl !== 'male.svg' && profilePicUrl !== 'female.svg') {
+            try {
+                await unlinkAsync(path.join(__dirname, '../images/profile_pictures/', profilePicUrl));
+            } catch (e) {
+                console.log('Could not delete profile pic:', profilePicUrl);
+            }
+        }
 
-    const removedMessages = await Messages.deleteMany({ chat: allChats });
-    await Chat.deleteMany({ users: { $elemMatch: { $eq: req.user._id } }, groupAdmin: userId });
-    await Chat.updateMany(
-        { users: { $elemMatch: { $eq: req.user._id } }, isGroupChat: true },
-        { $pull: { users: userId } },
-        { new: true }
-    );
+        const removedMessages = await Messages.deleteMany({ chat: { $in: allChats.map(c => c._id) } });
+        await Chat.deleteMany({ users: { $elemMatch: { $eq: req.user._id } }, groupAdmin: userId });
+        await Chat.updateMany(
+            { users: { $elemMatch: { $eq: req.user._id } }, isGroupChat: true },
+            { $pull: { users: userId } },
+            { new: true }
+        );
 
-    const removedNotGroupChats = await Chat.deleteMany({ users: { $elemMatch: { $eq: req.user._id } }, isGroupChat: false });
-    const removed = await User.deleteOne({ _id: userId });
-    if (!removed || !removedNotGroupChats || !removedMessages) {
-        res.status(404);
-        throw new Error("Chat Not Found");
-    } else {
+        const removedNotGroupChats = await Chat.deleteMany({ users: { $elemMatch: { $eq: req.user._id } }, isGroupChat: false });
+        const removed = await User.deleteOne({ _id: userId });
+        
         res.json({ status: true });
+    } catch (error) {
+        console.error('Delete profile error:', error);
+        res.status(500).json({ status: false, message: "Error deleting account" });
+    }
+};
+
+// Migrate existing users to have gender and default profile pics
+module.exports.migrateUsersDefaults = async (req, res, next) => {
+    try {
+        // Find all users without gender field or with default.svg profile pic
+        const usersToUpdate = await User.find({
+            $or: [
+                { gender: { $exists: false } },
+                { gender: null },
+                { profilePic: 'default.svg' },
+                { profilePic: { $exists: false } },
+                { profilePic: null },
+                { profilePic: '' }
+            ]
+        });
+
+        let updatedCount = 0;
+        for (const user of usersToUpdate) {
+            const updateData = {};
+            
+            // Set default gender if not exists
+            if (!user.gender) {
+                updateData.gender = 'male'; // Default to male for existing users
+            }
+            
+            // Set default profile pic based on gender if it's missing or default.svg
+            if (!user.profilePic || user.profilePic === 'default.svg' || user.profilePic === '') {
+                updateData.profilePic = (user.gender === 'female' || updateData.gender === 'female') 
+                    ? 'female.svg' 
+                    : 'male.svg';
+            }
+            
+            if (Object.keys(updateData).length > 0) {
+                await User.findByIdAndUpdate(user._id, updateData);
+                updatedCount++;
+            }
+        }
+
+        res.json({ 
+            status: true, 
+            message: `Successfully updated ${updatedCount} users with default values.`,
+            updatedCount 
+        });
+    } catch (e) {
+        next(e);
     }
 };

@@ -27,6 +27,22 @@ const chatSchema = mongoose.Schema(
     groupPic: {
       type: String,
     },
+    blockedBy: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+      }
+    ],
+    wallpapers: {
+      type: Map,
+      of: String,
+      default: {}
+    },
+    nicknames: {
+      type: Map,
+      of: String,
+      default: {}
+    },
   },
   { timestamps: true }
 );

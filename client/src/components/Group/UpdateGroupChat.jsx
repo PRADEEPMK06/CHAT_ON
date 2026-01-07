@@ -3,7 +3,7 @@ import { GrFormClose } from "react-icons/gr";
 import { BsPencil } from "react-icons/bs";
 import { BsPencilFill } from "react-icons/bs";
 import { AiOutlineUserAdd } from "react-icons/ai";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 import axios from "axios";
 
@@ -229,7 +229,7 @@ const UpdateGroupChat = ({ fetchAgain, setFetchAgain, setModalActive }) => {
                     </div>
                 </div>
             </div>
-            <ToastContainer />
+
         </>
     );
 };

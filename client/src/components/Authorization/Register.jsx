@@ -3,11 +3,11 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { RxPerson, RxEyeOpen, RxEyeClosed } from "react-icons/rx";
 import { MdOutlineAddAPhoto } from "react-icons/md";
-import { FiMail, FiLock, FiUnlock } from "react-icons/fi";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { FiMail, FiLock, FiUnlock, FiUser } from "react-icons/fi";
+import { toast } from "react-toastify";
 import { registerRoute } from "../../utils/APIRoutes";
 import { toastOptions } from "../../utils/constants";
+import { getProfilePicUrl } from "../../utils/profileUtils";
 import OTPVerification from "./OTPVerification";
 
 function Register({ isLoginActive }) {
@@ -17,12 +17,14 @@ function Register({ isLoginActive }) {
     email: "",
     password: "",
     confirmPassword: "",
+    gender: "male",
     profilePic: null,
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState(null);
   
   // OTP verification state
   const [showOTPVerification, setShowOTPVerification] = useState(false);
@@ -38,7 +40,19 @@ function Register({ isLoginActive }) {
 
   // Handle profile picture upload
   const handleImageUpload = (e) => {
-    setValues({ ...values, profilePic: e.target.files[0] });
+    const file = e.target.files[0];
+    if (file) {
+      setValues({ ...values, profilePic: file });
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
+  // Get profile pic to display (preview or gender-based default)
+  const getDisplayProfilePic = () => {
+    if (previewUrl) {
+      return previewUrl;
+    }
+    return getProfilePicUrl(null, values.gender);
   };
 
   // Validation function
@@ -76,11 +90,12 @@ function Register({ isLoginActive }) {
 
     setLoading(true);
     try {
-      const { username, email, password, profilePic } = values;
+      const { username, email, password, gender, profilePic } = values;
       const formData = new FormData();
       formData.append("username", username);
       formData.append("email", email);
       formData.append("password", password);
+      formData.append("gender", gender);
       if (profilePic) {
         formData.append("profilePic", profilePic, profilePic.name);
       }
@@ -167,6 +182,20 @@ function Register({ isLoginActive }) {
             <FiMail />
           </div>
 
+          {/* Gender Selection */}
+          <div className="input-field gender-field">
+            <FiUser />
+            <select
+              name="gender"
+              value={values.gender}
+              onChange={handleChange}
+            >
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
           {/* Password */}
           <div className="input-field">
             <input
@@ -214,14 +243,24 @@ function Register({ isLoginActive }) {
           </div>
 
           {/* Profile Picture */}
-          <div className="input-field">
-            <input
-              type="file"
-              name="profilePic"
-              accept="image/*"
-              onChange={handleImageUpload}
-            />
-            <MdOutlineAddAPhoto />
+          <div className="input-field profile-pic-field">
+            <label className="profile-pic-label">
+              <img 
+                src={getDisplayProfilePic()} 
+                alt="Profile Preview" 
+                className="profile-preview"
+              />
+              <input
+                type="file"
+                name="profilePic"
+                accept="image/*"
+                onChange={handleImageUpload}
+                style={{ display: 'none' }}
+              />
+              <span className="upload-overlay">
+                <MdOutlineAddAPhoto />
+              </span>
+            </label>
           </div>
 
           {/* Submit Button */}
@@ -246,8 +285,6 @@ function Register({ isLoginActive }) {
           </div>
         </form>
       </div>
-
-      <ToastContainer />
     </>
   );
 }

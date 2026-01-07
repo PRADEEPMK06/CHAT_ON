@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { GrFormClose } from "react-icons/gr";
-import { BsPencil, BsImage } from "react-icons/bs";
-import { RxEyeOpen, RxEyeClosed } from "react-icons/rx";
+import { BsPencil, BsTrash } from "react-icons/bs";
+import { RxEyeOpen, RxEyeClosed, RxUpload } from "react-icons/rx";
 import { FiMail, FiLock, FiUnlock } from "react-icons/fi";
-import { IoColorPaletteOutline } from "react-icons/io5";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 import axios from "axios";
 
@@ -13,14 +12,15 @@ import {
     renameUserRoute,
     emailUpdateRoute,
     profilePicUpdateRoute,
-    bannerUpdateRoute,
     passwordUpdateRoute
 } from "../utils/APIRoutes";
 import { toastOptions } from "../utils/constants";
+import { getProfilePicUrl } from "../utils/profileUtils";
 
 
 function UpdateProfile({ fetchAgain, setFetchAgain, setModalActive, handleDelete }) {
     const { user, setUser } = ChatState();
+    const fileInputRef = useRef(null);
     //new values 
     const [newUsername, setNewUsername] = useState();
     const [newEmail, setNewEmail] = useState();
@@ -31,14 +31,11 @@ function UpdateProfile({ fetchAgain, setFetchAgain, setModalActive, handleDelete
     const [showEmailInput, setShowEmailInput] = useState(false);
     const [showUsernameInput, setShowUsernameInput] = useState(false);
     const [showPasswordInput, setShowPasswordInput] = useState(false);
-    const [showBannerOptions, setShowBannerOptions] = useState(false);
+    const [showProfilePicOptions, setShowProfilePicOptions] = useState(false);
     //show password
     const [showOld, setShowOld] = useState(false);
     const [show, setShow] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
-    
-    // Banner color options
-    const bannerColors = ['#87CEEB', '#FFB6C1', '#98FB98', '#DDA0DD', '#F0E68C', '#87CEFA', '#FFA07A', '#20B2AA'];
 
     const handleLocalStorage = (data) => {
         if (data.status === true) {
@@ -124,39 +121,14 @@ function UpdateProfile({ fetchAgain, setFetchAgain, setModalActive, handleDelete
             setUser(data.updatedUser);
             handleLocalStorage(data);
             setFetchAgain(!fetchAgain);
+            setShowProfilePicOptions(false);
+            toast.success("Profile picture updated!", toastOptions);
         } catch (error) {
             toast.error("something went wrong", toastOptions);
         }
     };
 
-    const bannerImageUpload = async (event) => {
-        event.preventDefault();
-        const bannerPic = event.target.files[0];
-        const formData = new FormData();
-        const config = {
-            headers: {
-                Authorization: `Bearer ${user.token}`
-            }
-        };
-        try {
-            formData.append("userId", user._id);
-            if (bannerPic) formData.append("bannerPic", bannerPic, bannerPic.name);
-            const { data } = await axios.put(
-                `${bannerUpdateRoute}`,
-                formData,
-                config
-            );
-            setUser(data.updatedUser);
-            handleLocalStorage(data);
-            setFetchAgain(!fetchAgain);
-            toast.success("Banner updated successfully", toastOptions);
-            setShowBannerOptions(false);
-        } catch (error) {
-            toast.error("Something went wrong", toastOptions);
-        }
-    };
-
-    const handleBannerColor = async (color) => {
+    const removeProfilePic = async () => {
         const config = {
             headers: {
                 Authorization: `Bearer ${user.token}`
@@ -164,15 +136,15 @@ function UpdateProfile({ fetchAgain, setFetchAgain, setModalActive, handleDelete
         };
         try {
             const { data } = await axios.put(
-                `${bannerUpdateRoute}`,
-                { userId: user._id, bannerColor: color },
+                `${profilePicUpdateRoute}`,
+                { userId: user._id, removeProfilePic: true },
                 config
             );
             setUser(data.updatedUser);
             handleLocalStorage(data);
             setFetchAgain(!fetchAgain);
-            toast.success("Banner color updated", toastOptions);
-            setShowBannerOptions(false);
+            setShowProfilePicOptions(false);
+            toast.success("Profile picture removed!", toastOptions);
         } catch (error) {
             toast.error("Something went wrong", toastOptions);
         }
@@ -211,59 +183,43 @@ function UpdateProfile({ fetchAgain, setFetchAgain, setModalActive, handleDelete
                         </button>
                     </div>
                     
-                    {/* Banner Section */}
-                    <div className="banner-edit-section"
+                    {/* Banner Section - Static Display */}
+                    <div className="banner-section"
                         style={user.bannerPic 
                             ? { backgroundImage: `url(${process.env.REACT_APP_PROFILE_PICS_PATHS + user.bannerPic})` }
                             : { backgroundColor: user.bannerColor || '#87CEEB' }
                         }
                     >
-                        <button className="edit-banner-btn" onClick={() => setShowBannerOptions(!showBannerOptions)}>
-                            <BsPencil /> Edit Banner
-                        </button>
-                        
-                        {showBannerOptions && (
-                            <div className="banner-options">
-                                <div className="banner-option">
-                                    <label>
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={bannerImageUpload}
-                                            style={{ display: 'none' }}
-                                        />
-                                        <span className="option-btn"><BsImage /> Upload Image</span>
-                                    </label>
-                                </div>
-                                <div className="color-options">
-                                    <span><IoColorPaletteOutline /> Pick Color:</span>
-                                    <div className="colors">
-                                        {bannerColors.map((color) => (
-                                            <button
-                                                key={color}
-                                                className="color-btn"
-                                                style={{ backgroundColor: color }}
-                                                onClick={() => handleBannerColor(color)}
-                                            />
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
                     </div>
                     
                     <div className="modal-header">
-                        <div className="avatar">
-                            <label>
-                                <input
-                                    type="file"
-                                    name="profilePic"
-                                    accept="image/*"
-                                    onChange={(event) => imageUpload(event)} />
-                                <img src={process.env.REACT_APP_PROFILE_PICS_PATHS + user.profilePic}
-                                    alt={user.username} />
-                                <div className="hover-text">Update profile picture</div>
-                            </label>
+                        <div className="avatar" onClick={() => setShowProfilePicOptions(!showProfilePicOptions)}>
+                            <img src={getProfilePicUrl(user.profilePic, user.gender)}
+                                alt={user.username} />
+                            <div className="hover-text">
+                                <BsPencil /> Edit
+                            </div>
+                            
+                            {showProfilePicOptions && (
+                                <div className="profile-pic-options" onClick={(e) => e.stopPropagation()}>
+                                    <label className="option-item">
+                                        <input
+                                            type="file"
+                                            name="profilePic"
+                                            accept="image/*"
+                                            onChange={(event) => imageUpload(event)}
+                                            style={{ display: 'none' }}
+                                        />
+                                        <RxUpload /> Upload Photo
+                                    </label>
+                                    <button 
+                                        className="option-item remove"
+                                        onClick={removeProfilePic}
+                                    >
+                                        <BsTrash /> Remove Photo
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                     <div className="modal-content">
@@ -371,7 +327,6 @@ function UpdateProfile({ fetchAgain, setFetchAgain, setModalActive, handleDelete
                     </div>
                 </div>
             </div>
-            <ToastContainer />
         </>
     );
 }

@@ -1,43 +1,142 @@
 .user-info{
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     background: $header_gradient;
+    padding: $gap_lg $gap_sm;
 
     &::after{
         display: none;
     }
+    
+    @media screen and (max-width: 480px) {
+        padding: $gap_md $gap_sm;
+    }
 
-    .banner-section {
-        width: 100%;
-        height: $base * 20;
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
+    .user-info-layout {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: $gap_sm;
+        
+        @media screen and (max-width: 720px) {
+            flex-direction: column;
+            gap: $gap_sm * 0.5;
+        }
+
+        .left-division {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: $gap_sm;
+            
+            @media screen and (max-width: 720px) {
+                flex-direction: column;
+                gap: $gap_sm * 0.5;
+            }
+
+            .profile-pic-container {
+                flex-shrink: 0;
+                height: $base * 16;
+                width: $base * 16;
+                
+                @media screen and (max-width: 720px) {
+                    height: $base * 14;
+                    width: $base * 14;
+                }
+                
+                @media screen and (max-width: 480px) {
+                    height: $base * 12;
+                    width: $base * 12;
+                }
+
+                img {
+                    border-radius: $border_round;
+                    height: 100%;
+                    width: 100%;
+                    object-fit: cover;
+                }
+            }
+        }
+
+        .right-division {
+            display: flex;
+            flex-direction: column;
+            gap: $gap_sm * 0.5;
+            position: relative;
+            z-index: 10;
+            
+            @media screen and (max-width: 720px) {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .icon-button {
+                padding: $gap_sm * 0.75 $gap_md * 0.75;
+                border: 1px solid $border_color_light;
+                border-radius: $border_radius;
+                background-color: transparent;
+                color: $text_main_color;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                font-size: $font_sm;
+                position: relative;
+                z-index: 10;
+                
+                @media screen and (max-width: 720px) {
+                    padding: $gap_sm * 0.5 $gap_md * 0.5;
+                    font-size: $base * 2.5;
+                }
+
+                &:hover {
+                    background-color: $selection_color;
+                }
+            }
+        }
     }
 
     .user-profile-section {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: $gap_md;
+        gap: $gap_sm;
         width: 100%;
-        padding: $gap_md;
-        margin-top: -$base * 8;
+        padding: $gap_sm;
+        padding-top: $gap_md;
+        margin-top: 0;
+        
+        @media screen and (max-width: 720px) {
+            padding: $gap_sm * 0.5;
+            padding-top: $gap_sm;
+        }
 
         .profile-pic-container {
             position: relative;
             cursor: pointer;
+            flex-shrink: 0;
             
             img {
                 border-radius: $border_round;
-                height: $base * 14;
-                width: $base * 14;
+                height: $base * 16;
+                width: $base * 16;
                 object-fit: cover;
-                border: 4px solid $white;
+                border: 3px solid $white;
                 transition: all 0.3s ease;
                 box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
                 background: $white;
+                
+                @media screen and (max-width: 720px) {
+                    height: $base * 14;
+                    width: $base * 14;
+                }
+                
+                @media screen and (max-width: 480px) {
+                    height: $base * 12;
+                    width: $base * 12;
+                }
             }
 
             .edit-overlay {
@@ -75,12 +174,63 @@
                 font-size: $gap_md * 0.85;
                 padding: $gap_sm $gap_md;
                 white-space: nowrap;
+                pointer-events: none;
                 
                 &::after {
                     top: -8px;
                     left: 50%;
                     transform: translateX(-50%);
                     border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;
+                }
+            }
+            
+            .profile-pic-options {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background: $white;
+                border-radius: $base * 2;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+                z-index: 100;
+                overflow: hidden;
+                min-width: $base * 35;
+                margin-top: $gap_sm;
+                
+                &::before {
+                    content: '';
+                    position: absolute;
+                    top: -10px;
+                    left: 0;
+                    right: 0;
+                    height: 10px;
+                    background: transparent;
+                }
+                
+                .option-item {
+                    display: flex;
+                    align-items: center;
+                    gap: $gap_sm;
+                    padding: $gap_md $gap_lg;
+                    width: 100%;
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    font-size: $base * 3;
+                    color: $text_main_color;
+                    transition: all 0.2s ease;
+                    
+                    &:hover {
+                        background: $selection_color;
+                        color: $main_color;
+                    }
+                    
+                    &.remove {
+                        color: $accent_color;
+                        
+                        &:hover {
+                            background: rgba(255, 107, 107, 0.1);
+                        }
+                    }
                 }
             }
         }
@@ -109,6 +259,7 @@
             .tooltiptext {
                 top: 110%;
                 background: rgba(0, 0, 0, 0.8);
+                pointer-events: none;
             }
         }
     }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { GrFormClose } from "react-icons/gr";
 import { BsPencil } from "react-icons/bs";
 import { AiOutlineUserAdd } from "react-icons/ai";
@@ -14,19 +14,23 @@ import UserListItem from "../Aux/UserListItem"
 import UserBage from "../Aux/UserBage";
 
 function GroupChatCreate({ setModalActive }) {
-    const [groupChatName, setGroupChatName] = useState();
+    if (typeof setModalActive !== "function") {
+        console.error("setModalActive is not a function");
+        return null; // Prevent rendering if the prop is invalid
+    }
+
+    const [groupChatName, setGroupChatName] = useState(""); // Initialize with empty string
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [search, setSearch] = useState("");
     const [searchResult, setSearchResult] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [activeSearch, setActiveSearch] = useState(false)
+    const [activeSearch, setActiveSearch] = useState(false);
     const { user, chats, setChats } = ChatState();
 
     const handleGroup = (userToAdd) => {
         if (selectedUsers.includes(userToAdd)) {
             toast.warning("User already added", toastOptions);
             return;
-        } else {
         }
         setSelectedUsers([...selectedUsers, userToAdd]);
     };
@@ -34,6 +38,7 @@ function GroupChatCreate({ setModalActive }) {
     const handleSearch = async (query) => {
         setSearch(query);
         if (!query) {
+            setSearchResult([]); // Clear search results when query is empty
             return;
         }
         try {
@@ -44,12 +49,9 @@ function GroupChatCreate({ setModalActive }) {
                     Authorization: `Bearer ${user.token}`,
                 },
             };
-            const getUsers = async () => {
-                const { data } = await axios.get(`${allUsersRoute}?search=${query}`, config);
-                setLoading(false);
-                setSearchResult(data);
-            };
-            getUsers();
+            const { data } = await axios.get(`${allUsersRoute}?search=${query}`, config);
+            setLoading(false);
+            setSearchResult(data);
         } catch (error) {
             toast.error("Failed to load the Search Results", toastOptions);
         }
@@ -59,10 +61,10 @@ function GroupChatCreate({ setModalActive }) {
         setSelectedUsers(selectedUsers.filter((sel) => sel._id !== delUser._id));
     };
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        if (!groupChatName || !selectedUsers) {
-            toast.warning("Please fill all the feilds", toastOptions);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!groupChatName || selectedUsers.length === 0) {
+            toast.warning("Please fill all the fields", toastOptions);
             return;
         }
         try {
@@ -71,18 +73,18 @@ function GroupChatCreate({ setModalActive }) {
                     Authorization: `Bearer ${user.token}`,
                 },
             };
-            const { data } = await axios.post(
-                `${groupChatRoute}`,
-                { name: groupChatName, users: JSON.stringify(selectedUsers.map((u) => u._id)) },
-                config
-            );
+            const { data } = await axios.post(groupChatRoute, {
+                name: groupChatName,
+                users: JSON.stringify(selectedUsers.map((u) => u._id)),
+            }, config);
             setChats([data, ...chats]);
-            console.log(data)
+            setModalActive("not"); // Close modal after successful creation
             toast.success("New Group Chat Created!", toastOptions);
         } catch (error) {
-            toast.error(error.response.data.message, toastOptions);
+            toast.error("Failed to Create the Chat!", toastOptions);
         }
     };
+
     return (
         <>
             <div className="create-group modal-wrapper">
@@ -139,7 +141,6 @@ function GroupChatCreate({ setModalActive }) {
                     </form>
                 </div>
             </div>
-            <ToastContainer />
         </>
     );
 }

@@ -36,7 +36,8 @@ body {
     @include flex_center_center;
     min-height: 100vh;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     font-size: $gap_md;
     overflow-wrap: break-word;
     font-family: 'Inter', 'Poppins', Arial, Helvetica, sans-serif;
@@ -346,6 +347,11 @@ body {
     z-index: 100;
     background-color: $modal_bg;
     animation: fadeIn 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    padding: $gap_lg;
 
     .modal-container{
         position: relative;
@@ -545,6 +551,7 @@ body {
     border-radius: $base * 2;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
+    pointer-events: none;
 
     &::after {
         content: " ";

@@ -214,3 +214,133 @@ module.exports.deleteChat = async (req, res) => {
     res.json(removed);
   }
 };
+
+// Block/Unblock a chat
+module.exports.blockChat = async (req, res) => {
+  const { chatId } = req.body;
+  const userId = req.user._id;
+
+  try {
+    const chat = await Chat.findById(chatId);
+    
+    if (!chat) {
+      return res.status(404).json({ message: "Chat Not Found", status: false });
+    }
+
+    // Check if already blocked by this user
+    const isBlocked = chat.blockedBy && chat.blockedBy.includes(userId);
+
+    let updatedChat;
+    if (isBlocked) {
+      // Unblock
+      updatedChat = await Chat.findByIdAndUpdate(
+        chatId,
+        { $pull: { blockedBy: userId } },
+        { new: true }
+      ).populate("users", "-password").populate("groupAdmin", "-password");
+    } else {
+      // Block
+      updatedChat = await Chat.findByIdAndUpdate(
+        chatId,
+        { $addToSet: { blockedBy: userId } },
+        { new: true }
+      ).populate("users", "-password").populate("groupAdmin", "-password");
+    }
+
+    res.json({ 
+      status: true, 
+      chat: updatedChat, 
+      blocked: !isBlocked,
+      message: isBlocked ? "Chat unblocked" : "Chat blocked"
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message, status: false });
+  }
+};
+
+// Update chat wallpaper for a user
+module.exports.updateWallpaper = async (req, res) => {
+  const { chatId, wallpaper } = req.body;
+  const userId = req.user._id.toString();
+
+  try {
+    const chat = await Chat.findById(chatId);
+    
+    if (!chat) {
+      return res.status(404).json({ message: "Chat Not Found", status: false });
+    }
+
+    // Update wallpaper for this user
+    if (!chat.wallpapers) {
+      chat.wallpapers = new Map();
+    }
+    chat.wallpapers.set(userId, wallpaper);
+    await chat.save();
+
+    const updatedChat = await Chat.findById(chatId)
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password");
+
+    res.json({ status: true, chat: updatedChat, message: "Wallpaper updated" });
+  } catch (error) {
+    res.status(400).json({ message: error.message, status: false });
+  }
+};
+
+// Update nickname for a user in a chat
+module.exports.updateNickname = async (req, res) => {
+  const { chatId, targetUserId, nickname } = req.body;
+  const userId = req.user._id.toString();
+
+  try {
+    const chat = await Chat.findById(chatId);
+    
+    if (!chat) {
+      return res.status(404).json({ message: "Chat Not Found", status: false });
+    }
+
+    // Create nickname key as "userId_targetUserId"
+    const nicknameKey = `${userId}_${targetUserId}`;
+    
+    if (!chat.nicknames) {
+      chat.nicknames = new Map();
+    }
+    
+    if (nickname && nickname.trim() !== '') {
+      chat.nicknames.set(nicknameKey, nickname.trim());
+    } else {
+      chat.nicknames.delete(nicknameKey);
+    }
+    await chat.save();
+
+    const updatedChat = await Chat.findById(chatId)
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password");
+
+    res.json({ status: true, chat: updatedChat, message: "Nickname updated" });
+  } catch (error) {
+    res.status(400).json({ message: error.message, status: false });
+  }
+};
+
+// Get users not in a specific group for adding
+module.exports.getUsersNotInGroup = async (req, res) => {
+  const { chatId } = req.params;
+
+  try {
+    const chat = await Chat.findById(chatId);
+    
+    if (!chat) {
+      return res.status(404).json({ message: "Chat Not Found", status: false });
+    }
+
+    // Get all users not in this chat
+    const users = await User.find({
+      _id: { $nin: chat.users }
+    }).select("-password");
+
+    res.json(users);
+  } catch (error) {
+    res.status(400).json({ message: error.message, status: false });
+  }
+};

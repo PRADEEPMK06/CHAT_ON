@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { RxPerson, RxEyeOpen, RxEyeClosed } from "react-icons/rx";
 import { FiLock } from "react-icons/fi";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { loginRoute } from "../../utils/APIRoutes";
 import { toastOptions } from "../../utils/constants";
 import OTPVerification from "./OTPVerification";
@@ -159,7 +158,6 @@ function Login({ isActive }) {
           </form>
         </div>
       </div>
-      <ToastContainer />
     </>
   );
 }

@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { verifyOTPRoute, resendOTPRoute } from "../../utils/APIRoutes";
 import { toastOptions } from "../../utils/constants";
 
@@ -197,7 +196,6 @@ function OTPVerification({ userId, email, onBack }) {
                     </div>
                 </form>
             </div>
-            <ToastContainer />
         </>
     );
 }

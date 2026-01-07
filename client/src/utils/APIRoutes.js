@@ -19,6 +19,10 @@ export const recieveMessageRoute = `${host}/api/messages/getmsg`;
 export const accessChatRoute = `${host}/api/chats/accessChat`;
 export const fetchChatsRoute = `${host}/api/chats/fetchChats`;
 export const deleteChatRoute = `${host}/api/chats/deleteChat`;
+export const blockChatRoute = `${host}/api/chats/blockChat`;
+export const updateWallpaperRoute = `${host}/api/chats/updateWallpaper`;
+export const updateNicknameRoute = `${host}/api/chats/updateNickname`;
+export const usersNotInGroupRoute = `${host}/api/chats/usersNotInGroup`;
 
 export const groupChatRoute = `${host}/api/chats/group`;
 export const renameGroupChatRoute = `${host}/api/chats/rename`;

@@ -9,6 +9,7 @@ const { login,
     bannerUpdate,
     passwordUpdate,
     deleteProfile,
+    migrateUsersDefaults,
  } = require("../controller/userController");
 const router = require("express").Router();
 const multer = require("multer");
@@ -37,5 +38,6 @@ router.route("/emailUpdate").put(protect, emailUpdate);
 router.route("/profilePicUpdate").put(protect, upload.single("profilePic"), profilePicUpdate);
 router.route("/bannerUpdate").put(protect, upload.single("bannerPic"), bannerUpdate);
 router.route("/passwordUpdate").put(protect, passwordUpdate);
+router.route("/migrateDefaults").post(protect, migrateUsersDefaults);
 
 module.exports = router;

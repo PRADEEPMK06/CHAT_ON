@@ -1,3 +1,5 @@
+import { getProfilePicUrl } from "../../utils/profileUtils";
+
 const UserListItem = ({ handleFunction, result }) => {
   return (
     <div className="contact"
@@ -6,7 +8,7 @@ const UserListItem = ({ handleFunction, result }) => {
       <div className="avatar" key={result._id}>
         <img
           alt={result.username}
-          src={process.env.REACT_APP_PROFILE_PICS_PATHS + result.profilePic}
+          src={getProfilePicUrl(result.profilePic, result.gender)}
         />
       </div>
         <h4>{result.username}</h4>
