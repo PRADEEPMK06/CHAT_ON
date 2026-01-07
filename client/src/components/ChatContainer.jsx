@@ -14,7 +14,7 @@ import { BsPencil } from "react-icons/bs";
 
 import { ChatState } from "../context/ChatProvider";
 import { getSender, getSenderProfilePic, getSenderFull } from "../config/ChatLogics";
-import { getProfilePicUrl } from "../utils/profileUtils";
+import { getProfilePicUrl, getGroupPicUrl } from "../utils/profileUtils";
 
 import UpdateGroupChat from "./Group/UpdateGroupChat";
 import SubmitModal from "./Aux/SubmitModal";
@@ -340,7 +340,7 @@ function ChatContainer({ socket, fetchAgain, setFetchAgain }) {
             <div className="avatar">
               <img
                 src={selectedChat.isGroupChat
-                  ? process.env.REACT_APP_PROFILE_PICS_PATHS + selectedChat.groupPic
+                  ? getGroupPicUrl(selectedChat.groupPic, profilePicVersion)
                   : getProfilePicUrl(getSenderProfilePic(user, selectedChat.users), selectedChat.users[0]._id === user._id ? selectedChat.users[1]?.gender : selectedChat.users[0]?.gender, profilePicVersion)}
                 alt={getDisplayName()}
               />
@@ -554,7 +554,7 @@ function ChatContainer({ socket, fetchAgain, setFetchAgain }) {
                             onClick={() => addUserToExistingGroup(group._id)}
                           >
                             <img 
-                              src={process.env.REACT_APP_PROFILE_PICS_PATHS + group.groupPic}
+                              src={getGroupPicUrl(group.groupPic, profilePicVersion)}
                               alt={group.chatName}
                             />
                             <span>{group.chatName}</span>

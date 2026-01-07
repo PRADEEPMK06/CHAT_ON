@@ -16,6 +16,7 @@ import {
     removeGroupChatRoute
 } from "../../utils/APIRoutes";
 import { toastOptions } from "../../utils/constants";
+import { getGroupPicUrl } from "../../utils/profileUtils";
 import UserListItem from "../Aux/UserListItem";
 import UserBage from "../Aux/UserBage";
 
@@ -167,7 +168,7 @@ const UpdateGroupChat = ({ fetchAgain, setFetchAgain, setModalActive }) => {
                                     accept="image/*"
                                     onChange={(event) => imageUpload(event)}
                                 />
-                                <img src={process.env.REACT_APP_PROFILE_PICS_PATHS + selectedChat.groupPic}
+                                <img src={getGroupPicUrl(selectedChat.groupPic)}
                                     alt={selectedChat.chatName}
                                 />
                                 <div className="hover-text">Update chat picture</div>

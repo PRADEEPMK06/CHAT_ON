@@ -3,12 +3,19 @@ const Chat = require("../model/chatModel");
 const Messages = require("../model/messageModel");
 const bcrypt = require('bcrypt');
 const config = require('config');
-const path = require('path');
-const fs = require('fs');
-const { promisify } = require('util');
-const unlinkAsync = promisify(fs.unlink);
 const { generateToken } = require('../config/generateToken');
 const { generateOTP, sendOTPEmail } = require('../config/emailService');
+const { cloudinary } = require('../config/cloudinary');
+
+// Helper function to extract public_id from Cloudinary URL
+const getPublicIdFromUrl = (url) => {
+    if (!url || !url.includes('cloudinary')) return null;
+    const parts = url.split('/');
+    const filename = parts[parts.length - 1];
+    const folder = parts[parts.length - 2];
+    const parentFolder = parts[parts.length - 3];
+    return `${parentFolder}/${folder}/${filename.split('.')[0]}`;
+};
 
 // Step 1: Initial registration - sends OTP
 module.exports.register = async (req, res, next) => {
@@ -20,7 +27,8 @@ module.exports.register = async (req, res, next) => {
         // Set default profile pic based on gender if no custom pic uploaded
         let profilePicUrl;
         if (req.file) {
-            profilePicUrl = req.file.filename;
+            // Cloudinary returns the full URL in req.file.path
+            profilePicUrl = req.file.path;
         } else {
             // Use gender-based default profile picture
             profilePicUrl = gender === 'female' ? 'female.svg' : 'male.svg';
@@ -338,29 +346,28 @@ module.exports.profilePicUpdate = async (req, res) => {
         // Set to gender-based default
         profilePicUrl = currentUser.gender === 'female' ? 'female.svg' : 'male.svg';
         
-        // Delete old profile pic if it's not a default
+        // Delete old profile pic from Cloudinary if it's not a default
         if (currentUser.profilePic && 
-            currentUser.profilePic !== 'default.svg' && 
-            currentUser.profilePic !== 'male.svg' && 
-            currentUser.profilePic !== 'female.svg') {
+            currentUser.profilePic.includes('cloudinary')) {
             try {
-                await unlinkAsync(path.join(__dirname, '../images/profile_pictures/', currentUser.profilePic));
+                const publicId = getPublicIdFromUrl(currentUser.profilePic);
+                if (publicId) await cloudinary.uploader.destroy(publicId);
             } catch (e) {
-                console.log('Could not delete old profile pic:', currentUser.profilePic);
+                console.log('Could not delete old profile pic from Cloudinary:', e.message);
             }
         }
     } else if (req.file) {
-        profilePicUrl = req.file.filename;
+        // Cloudinary returns full URL in req.file.path
+        profilePicUrl = req.file.path;
         
-        // Delete old profile pic if it's not a default
+        // Delete old profile pic from Cloudinary if it's not a default
         if (currentUser.profilePic && 
-            currentUser.profilePic !== 'default.svg' && 
-            currentUser.profilePic !== 'male.svg' && 
-            currentUser.profilePic !== 'female.svg') {
+            currentUser.profilePic.includes('cloudinary')) {
             try {
-                await unlinkAsync(path.join(__dirname, '../images/profile_pictures/', currentUser.profilePic));
+                const publicId = getPublicIdFromUrl(currentUser.profilePic);
+                if (publicId) await cloudinary.uploader.destroy(publicId);
             } catch (e) {
-                console.log('Could not delete old profile pic:', currentUser.profilePic);
+                console.log('Could not delete old profile pic from Cloudinary:', e.message);
             }
         }
     } else {
@@ -387,7 +394,8 @@ module.exports.profilePicUpdate = async (req, res) => {
 
 module.exports.bannerUpdate = async (req, res) => {
     const { userId, bannerColor } = req.body;
-    const bannerPicUrl = (req.file) ? req.file.filename : '';
+    // Cloudinary returns full URL in req.file.path
+    const bannerPicUrl = (req.file) ? req.file.path : '';
     
     const updateData = {};
     if (req.file) {

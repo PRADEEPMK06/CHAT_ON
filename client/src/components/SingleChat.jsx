@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import { ChatState } from "../context/ChatProvider";
 import { recieveMessageRoute, sendMessageRoute } from "../utils/APIRoutes";
 import { toastOptions } from "../utils/constants";
-import { getProfilePicUrl } from "../utils/profileUtils";
+import { getProfilePicUrl, getAttachmentUrl } from "../utils/profileUtils";
 import {
     isGroupRecieved,
     isAnotherSender,
@@ -149,7 +149,7 @@ function SingleChat({ fetchAgain, socket, setFetchAgain, selectedChat, wallpaper
                                                     </p>)
                                                     : <></>}
                                                 {message.attachment.length > 0
-                                                    ? (<img src={process.env.REACT_APP_ATTACHMENT_PATHS + message.attachment}
+                                                    ? (<img src={getAttachmentUrl(message.attachment)}
                                                         alt={message.sender.username} />)
                                                     : <></>}
                                             </div>

@@ -5,7 +5,7 @@ import { ChatState } from "../context/ChatProvider";
 import { fetchChatsRoute } from "../utils/APIRoutes";
 import { toastOptions } from "../utils/constants";
 import { getSender, getSenderProfilePic } from "../config/ChatLogics";
-import { getProfilePicUrl } from "../utils/profileUtils";
+import { getProfilePicUrl, getGroupPicUrl } from "../utils/profileUtils";
 import GroupChatCreate from "./Group/CreateGroupChat";
 
 function Contacts({ fetchAgain, selectedChat, socket }) {
@@ -66,7 +66,7 @@ function Contacts({ fetchAgain, selectedChat, socket }) {
                         >
                           <div className="avatar" >
                             <img src={chat.isGroupChat
-                              ? process.env.REACT_APP_PROFILE_PICS_PATHS + chat.groupPic
+                              ? getGroupPicUrl(chat.groupPic, profilePicVersion)
                               : getProfilePicUrl(getSenderProfilePic(user, chat.users), chat.users[0]._id === user._id ? chat.users[1]?.gender : chat.users[0]?.gender, profilePicVersion)}
                               alt={chat.isGroupChat
                                 ? chat.chatName

@@ -15,7 +15,7 @@ import {
     passwordUpdateRoute
 } from "../utils/APIRoutes";
 import { toastOptions } from "../utils/constants";
-import { getProfilePicUrl } from "../utils/profileUtils";
+import { getProfilePicUrl, getBannerPicUrl } from "../utils/profileUtils";
 
 
 function UpdateProfile({ fetchAgain, setFetchAgain, setModalActive, handleDelete }) {
@@ -186,7 +186,7 @@ function UpdateProfile({ fetchAgain, setFetchAgain, setModalActive, handleDelete
                     {/* Banner Section - Static Display */}
                     <div className="banner-section"
                         style={user.bannerPic 
-                            ? { backgroundImage: `url(${process.env.REACT_APP_PROFILE_PICS_PATHS + user.bannerPic})` }
+                            ? { backgroundImage: `url(${getBannerPicUrl(user.bannerPic)})` }
                             : { backgroundColor: user.bannerColor || '#87CEEB' }
                         }
                     >

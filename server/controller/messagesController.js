@@ -5,7 +5,7 @@ const Chat = require("../model/chatModel");
 module.exports.getMessages = async (req, res, next) => {
   try {
     const messages = await Messages.find({ chat: req.params.chatId })
-      .populate("sender", "username profilePic email")
+      .populate("sender", "username profilePic email gender")
       .populate({ path: "chat", populate: { path: 'latestMessage', populate: { path: 'sender' } } });
     res.json(messages);
   } catch (error) {
@@ -16,7 +16,8 @@ module.exports.getMessages = async (req, res, next) => {
 
 module.exports.addMessage = async (req, res, next) => {
   const { sender, chatId, content } = req.body;
-  const attachmentUrl = (req.file) ? req.file.filename : '';
+  // Cloudinary returns full URL in req.file.path
+  const attachmentUrl = (req.file) ? req.file.path : '';
   
   if (!chatId) {
     console.log("Invalid data passed into request");
@@ -36,10 +37,10 @@ module.exports.addMessage = async (req, res, next) => {
       },
       { new: true, }
     );
-    message = await message.populate("sender", "username profilePic");
+    message = await message.populate("sender", "username profilePic gender");
     message = await User.populate(message, {
       path: "chat.users",
-      select: "username profilePic",
+      select: "username profilePic gender",
     });
     message = await message.populate({ path: 'chat', populate: { path: 'latestMessage', populate: { path: 'sender' } } });
     res.json(message);

@@ -134,7 +134,8 @@ module.exports.renameGroup = async (req, res) => {
 
 module.exports.groupPicUpdate = async (req, res) => {
   const { chatId } = req.body;
-  const profilePicUrl = (req.file) ? req.file.filename : 'default.svg';
+  // Cloudinary returns full URL in req.file.path
+  const profilePicUrl = (req.file) ? req.file.path : 'default-group.svg';
 
   const updatedChat = await Chat.findByIdAndUpdate(
     chatId,
